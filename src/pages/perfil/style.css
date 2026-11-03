@@ -202,6 +202,10 @@
   color: var(--muted);
 }
 
+.pastilla-corta {
+  display: none;
+}
+
 .punto {
   width: 7px;
   height: 7px;
@@ -1229,13 +1233,13 @@ a.rol-empresa:hover {
 
 .sub {
   font-size: 1.02rem;
-  margin: 32px 0 0;
+  margin: 24px 0 0;
 }
 
 /* ---------- Certifications ---------- */
 
 .certificados {
-  margin-top: 16px;
+  margin-top: 8px;
 }
 
 .certificado {
@@ -1714,15 +1718,27 @@ a.rol-empresa:hover {
   }
 
   .riel {
-    position: sticky;
+    position: fixed;
     top: var(--header-h);
+    left: 0;
+    right: 0;
     z-index: 30;
-    margin: 0 -24px;
-    padding: 4px 24px;
-    background: color-mix(in srgb, var(--paper) 94%, transparent);
-    -webkit-backdrop-filter: blur(12px);
-    backdrop-filter: blur(12px);
+    margin: 0;
+    padding: 5px 24px 12px;
+    background: var(--paper);
     border-bottom: 1px solid var(--line);
+    box-shadow: 0 10px 18px -18px rgb(0 0 0 / 0.35);
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateY(-110%);
+    transition: transform 0.22s var(--ease-entrada), visibility 0s linear 0.22s;
+  }
+
+  .riel[data-visible] {
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateY(0);
+    transition: transform 0.22s var(--ease-entrada), visibility 0s linear 0s;
   }
 
   .indice {
@@ -1772,7 +1788,7 @@ a.rol-empresa:hover {
   }
 
   .seccion {
-    scroll-margin-top: calc(var(--header-h) + 64px);
+    scroll-margin-top: calc(var(--header-h) + 80px);
   }
 
   .hero {
@@ -1809,18 +1825,22 @@ a.rol-empresa:hover {
 
   .certificado summary {
     grid-template-columns: minmax(0, 1fr) 14px;
+    row-gap: 6px;
   }
 
   .cert-anio {
     grid-column: 1 / -1;
+    grid-row: 1;
   }
 
   .cert-nombre {
     grid-column: 1;
+    grid-row: 2;
   }
 
   .cert-entidad {
     grid-column: 1;
+    grid-row: 3;
     text-align: left;
   }
 
@@ -1872,14 +1892,13 @@ a.rol-empresa:hover {
   }
 
   .riel {
-    margin: 0 -18px;
-    padding: 4px 18px;
+    padding: 5px 18px 12px;
     scroll-padding-inline: 18px;
   }
 
   .seccion {
     padding-block: 34px;
-    scroll-margin-top: calc(var(--header-h) + 64px);
+    scroll-margin-top: calc(var(--header-h) + 80px);
   }
 
   .seccion-cab {
@@ -1949,9 +1968,24 @@ a.rol-empresa:hover {
     margin-bottom: 20px;
   }
 
+  .estado-linea {
+    flex-wrap: nowrap;
+    gap: 6px;
+    margin-bottom: 16px;
+  }
+
   .pastilla {
-    padding: 7px 12px;
+    padding: 7px 10px;
     font-size: 0.78rem;
+    white-space: nowrap;
+  }
+
+  .pastilla-larga {
+    display: none;
+  }
+
+  .pastilla-corta {
+    display: inline;
   }
 
   .hero-nombre-linea {
@@ -1983,9 +2017,21 @@ a.rol-empresa:hover {
   }
 
   .red {
+    width: 44px;
+    height: 44px;
     min-height: 44px;
-    padding: 10px 14px;
-    font-size: 0.8rem;
+    padding: 0;
+    justify-content: center;
+    border-radius: 50%;
+  }
+
+  .red span {
+    display: none;
+  }
+
+  .red svg {
+    width: 18px;
+    height: 18px;
   }
 
   .btn {
@@ -2187,7 +2233,7 @@ a.rol-empresa:hover {
   }
 
   .sub {
-    margin-top: 28px;
+    margin-top: 18px;
   }
 
   .idioma-badge {
@@ -2436,7 +2482,9 @@ a.rol-empresa:hover {
   .aptitud,
   .proyecto,
   .sello,
-  .red {
+  .red,
+  .riel,
+  .indice {
     transition: none;
   }
 

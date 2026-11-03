@@ -54,6 +54,9 @@ export const gl = {
   "hero.verificado": "Verificado",
   "hero.verificadoInfo": "Identidade verificada en LinkedIn. Abre o perfil para comprobalo.",
   "hero.redes": "Redes e ligazóns",
+  "hero.estadoCorto": "Aberto",
+  "hero.modalidadCorta": "Híbrido",
+  "hero.disponibilidadCorta": "Inmediata",
 
   "meta.ubicacion": "Localización",
   "meta.disponibilidad": "Dispoñibilidade",

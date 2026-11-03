@@ -80,11 +80,11 @@ function pintarRedes(raiz: ParentNode, d: Perfil): void {
   if (!caja) return;
   vaciar(caja);
   const email = d.perfil.contacto.email;
-  const items: Array<{ texto: string; url: string; icono: "linkedin" | "github" | "web" | "mail" }> = [
-    { texto: "LinkedIn", url: d.perfil.contacto.linkedin, icono: "linkedin" },
-    { texto: "GitHub", url: d.perfil.contacto.github, icono: "github" },
-    { texto: "gacarbla.es", url: d.perfil.contacto.web, icono: "web" },
-    { texto: email, url: `mailto:${email}`, icono: "mail" },
+  const items: Array<{ texto: string; etiqueta: string; url: string; icono: "linkedin" | "github" | "web" | "mail" }> = [
+    { texto: "LinkedIn", etiqueta: "LinkedIn", url: d.perfil.contacto.linkedin, icono: "linkedin" },
+    { texto: "GitHub", etiqueta: "GitHub", url: d.perfil.contacto.github, icono: "github" },
+    { texto: "gacarbla.es", etiqueta: "Web: gacarbla.es", url: d.perfil.contacto.web, icono: "web" },
+    { texto: email, etiqueta: `${i18n.t("contacto.email")}: ${email}`, url: `mailto:${email}`, icono: "mail" },
   ];
   for (const item of items) {
     if (!item.url) continue;
@@ -92,10 +92,12 @@ function pintarRedes(raiz: ParentNode, d: Perfil): void {
       class: "red",
       attrs: {
         href: item.url,
+        "aria-label": item.etiqueta,
+        title: item.etiqueta,
         ...(item.url.startsWith("http") ? { target: "_blank", rel: "noopener noreferrer" } : {}),
       },
     });
-    a.append(iconoSvg(item.icono, 15), crear("span", { text: item.texto }));
+    a.append(iconoSvg(item.icono, 17), crear("span", { text: item.texto }));
     caja.append(a);
   }
 }
@@ -690,6 +692,8 @@ function configurarIndice(raiz: Element): () => void {
   if (enlaces.length === 0) return () => {};
   const secciones = [...raiz.querySelectorAll<HTMLElement>("section[id]")];
   const indice = raiz.querySelector<HTMLElement>(".indice");
+  const riel = raiz.querySelector<HTMLElement>(".riel");
+  const primerCabecera = raiz.querySelector<HTMLElement>(".perfil-contenido .seccion:first-child .seccion-cab");
   let activaPrevia = "";
   let ticking = false;
   const centrar = (a: HTMLAnchorElement): void => {
@@ -704,7 +708,12 @@ function configurarIndice(raiz: Element): () => void {
     ticking = false;
     if (!raiz.isConnected) return;
     const cabecera = document.querySelector<HTMLElement>("[data-cabecera]");
-    const margen = (cabecera?.getBoundingClientRect().height ?? 64) + 120;
+    const alturaCabecera = cabecera?.getBoundingClientRect().height ?? 64;
+    const margen = alturaCabecera + 120;
+    if (riel && primerCabecera) {
+      const limite = alturaCabecera + riel.offsetHeight + 24;
+      riel.toggleAttribute("data-visible", primerCabecera.getBoundingClientRect().bottom <= limite);
+    }
     let activa = secciones[0]?.id ?? "";
     for (const s of secciones) {
       if (s.getBoundingClientRect().top <= margen) activa = s.id;

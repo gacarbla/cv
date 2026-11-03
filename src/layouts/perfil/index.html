@@ -15,7 +15,14 @@
       <div class="acciones">
         <button class="icono" type="button" data-accion="tema" data-i18n-aria-label="comun.tema" aria-label="Cambiar tema"></button>
         <div class="idiomas" data-idiomas role="group" data-i18n-aria-label="comun.idioma" aria-label="Idioma"></div>
-        <select class="idioma-select" data-idioma-select data-i18n-aria-label="comun.idioma" aria-label="Idioma"></select>
+        <div class="idioma-menu" data-idioma-menu>
+          <button class="idioma-boton" type="button" data-idioma-toggle aria-haspopup="listbox" aria-expanded="false" aria-label="Idioma">
+            <span class="idioma-bandera" data-idioma-bandera aria-hidden="true"></span>
+            <span class="idioma-codigo" data-idioma-codigo>ES</span>
+            <span class="idioma-flecha" aria-hidden="true"></span>
+          </button>
+          <div class="idioma-lista" data-idioma-lista role="listbox" data-i18n-aria-label="comun.idioma" aria-label="Idioma" hidden></div>
+        </div>
         <button class="icono" type="button" data-accion="salir" data-icono="log-out" data-i18n-aria-label="comun.salir" aria-label="Cerrar sesión"></button>
       </div>
     </div>
