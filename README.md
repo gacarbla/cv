@@ -166,7 +166,7 @@ rg -f privado/patrones-privacidad.txt web/
 
 El único resultado esperado es el correo público de solicitud de acceso. El nombre, las empresas, las fechas, la recomendación y los identificadores viven dentro del sobre cifrado.
 
-GitHub Pages no permite cabeceras HTTP personalizadas; `serve.json` las aplica en local. Si quieres `frame-ancestors`, HSTS u otras cabeceras en producción, sirve el dominio detrás de Cloudflare o de un proxy equivalente.
+GitHub Pages no permite cabeceras HTTP personalizadas; `serve.json` las aplica en local. Para `frame-ancestors`, HSTS u otras cabeceras en producción haría falta un proxy equivalente. Si se usa Cloudflare como DNS, el registro `cv` debe ser **DNS only** (nube gris): con el proxy naranja, el reto de seguridad de Cloudflare choca con la CSP del CV y el dominio devuelve 403.
 
 ---
 
