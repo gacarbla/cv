@@ -113,6 +113,7 @@ html {
   scroll-behavior: smooth;
   overflow-x: clip;
   scrollbar-gutter: stable;
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
@@ -145,6 +146,17 @@ a {
 
 button {
   font: inherit;
+}
+
+button,
+summary,
+.btn,
+.chip,
+.red,
+.indice a,
+.icono,
+.idioma-select {
+  touch-action: manipulation;
 }
 
 :focus-visible {
@@ -368,6 +380,24 @@ page {
   color: var(--paper);
 }
 
+.idioma-select {
+  display: none;
+  height: 44px;
+  min-width: 62px;
+  padding: 0 8px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-align: center;
+  text-align-last: center;
+  cursor: pointer;
+}
+
 .progreso {
   position: absolute;
   left: 0;
@@ -463,6 +493,26 @@ page {
   font-size: 0.76rem;
 }
 
+@media (max-width: 900px) {
+  .marca {
+    align-items: center;
+    min-height: 44px;
+  }
+
+  .icono {
+    width: 44px;
+    height: 44px;
+  }
+
+  .idiomas {
+    display: none;
+  }
+
+  .idioma-select {
+    display: inline-block;
+  }
+}
+
 @media (max-width: 820px) {
   .cabecera-contexto,
   .accion-texto,
@@ -472,6 +522,28 @@ page {
 
   .cabecera-in {
     padding: 0 18px;
+  }
+
+  .marca {
+    align-items: center;
+    min-height: 44px;
+  }
+
+  .acciones {
+    gap: 6px;
+  }
+
+  .icono {
+    width: 44px;
+    height: 44px;
+  }
+
+  .idiomas {
+    display: none;
+  }
+
+  .idioma-select {
+    display: inline-block;
   }
 
   .contenido-perfil {
@@ -489,7 +561,7 @@ page {
 @media (max-width: 420px) {
   .cabecera-in {
     padding: 0 14px;
-    gap: 8px;
+    gap: 6px;
   }
 
   .marca {
@@ -501,18 +573,24 @@ page {
     gap: 4px;
   }
 
-  .icono {
-    width: 34px;
-    height: 34px;
+  .idioma-select {
+    min-width: 58px;
+    padding-inline: 7px;
+  }
+}
+
+@media (max-width: 360px) {
+  .cabecera-in {
+    padding: 0 12px;
   }
 
-  .idiomas {
-    padding: 1px;
+  .marca {
+    font-size: 0.8rem;
   }
 
-  .idiomas button {
-    padding: 4px 6px;
-    font-size: 0.58rem;
+  .idioma-select {
+    min-width: 54px;
+    padding-inline: 6px;
   }
 }
 

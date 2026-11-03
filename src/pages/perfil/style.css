@@ -565,6 +565,10 @@
   line-height: 1.4;
 }
 
+.traza[hidden] {
+  display: none;
+}
+
 .traza .enlace {
   font-size: 0.76rem;
   white-space: nowrap;
@@ -1649,6 +1653,60 @@ a.rol-empresa:hover {
 /* ---------- Responsive ---------- */
 
 @media (max-width: 900px) {
+  .sello {
+    width: 44px;
+    height: 44px;
+  }
+
+  .contacto-email {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+
+  .pie-in .enlace,
+  .pie-in a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+
+  .btn,
+  .red,
+  .rol-detalle summary,
+  .enlace-flecha,
+  .rol-empresa {
+    min-height: 44px;
+  }
+
+  button.chip,
+  .filtros .chip,
+  [data-filtros-aptitudes] .chip {
+    min-height: 44px;
+    padding: 10px 14px;
+  }
+
+  .dialogo-cab .icono {
+    width: 44px;
+    height: 44px;
+  }
+
+  .contacto-lista button {
+    min-height: 44px;
+  }
+
+  .pdf-acciones a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    padding: 10px 16px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    font-size: 0.84rem;
+    font-weight: 600;
+  }
+
   .perfil-grid {
     grid-template-columns: minmax(0, 1fr);
     gap: 0;
@@ -1660,7 +1718,7 @@ a.rol-empresa:hover {
     top: var(--header-h);
     z-index: 30;
     margin: 0 -24px;
-    padding: 8px 24px;
+    padding: 4px 24px;
     background: color-mix(in srgb, var(--paper) 94%, transparent);
     -webkit-backdrop-filter: blur(12px);
     backdrop-filter: blur(12px);
@@ -1669,11 +1727,13 @@ a.rol-empresa:hover {
 
   .indice {
     flex-direction: row;
-    gap: 5px;
+    gap: 6px;
     border-left: 0;
     overflow-x: auto;
     scrollbar-width: none;
-    padding-bottom: 1px;
+    padding-right: 24px;
+    padding-bottom: 2px;
+    scroll-padding-inline: 24px;
   }
 
   .indice::-webkit-scrollbar {
@@ -1682,11 +1742,15 @@ a.rol-empresa:hover {
 
   .indice a {
     flex: none;
-    padding: 5px 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    padding: 10px 14px;
     border: 1px solid var(--line);
     border-radius: 999px;
     white-space: nowrap;
-    font-size: 0.74rem;
+    font-size: 0.8rem;
   }
 
   .indice a.activo {
@@ -1705,6 +1769,10 @@ a.rol-empresa:hover {
 
   .riel-acciones {
     display: none;
+  }
+
+  .seccion {
+    scroll-margin-top: calc(var(--header-h) + 64px);
   }
 
   .hero {
@@ -1787,7 +1855,12 @@ a.rol-empresa:hover {
     grid-template-columns: minmax(0, 1fr);
   }
 
+  .franja-meta > div {
+    padding: 14px 0;
+  }
+
   .franja-meta > div + div {
+    border-top: 1px solid var(--line);
     border-left: 0;
   }
 }
@@ -1795,16 +1868,30 @@ a.rol-empresa:hover {
 @media (max-width: 560px) {
   .contenido-perfil {
     --pad-cv: 18px;
-    padding: 0 var(--pad-cv) 56px;
+    padding: 0 var(--pad-cv) 48px;
   }
 
   .riel {
     margin: 0 -18px;
-    padding: 7px 18px;
+    padding: 4px 18px;
+    scroll-padding-inline: 18px;
   }
 
   .seccion {
+    padding-block: 34px;
     scroll-margin-top: calc(var(--header-h) + 64px);
+  }
+
+  .seccion-cab {
+    margin-bottom: 20px;
+  }
+
+  .seccion-cab h2 {
+    font-size: clamp(1.65rem, 7.2vw, 2.1rem);
+  }
+
+  .seccion-cab .lede {
+    font-size: 0.95rem;
   }
 
   .franja-meta {
@@ -1815,13 +1902,251 @@ a.rol-empresa:hover {
     border-left: 0;
   }
 
+  .meta-label {
+    font-size: 0.68rem;
+  }
+
+  .insignia {
+    font-size: 0.62rem;
+    padding: 4px 8px;
+  }
+
+  .ficha-label {
+    font-size: 0.66rem;
+  }
+
+  .meta-valor {
+    font-size: 0.9rem;
+  }
+
+  .hero {
+    padding-top: 24px;
+    padding-bottom: 28px;
+  }
+
+  .hero h1 {
+    font-size: clamp(2.05rem, 8.4vw, 2.65rem);
+    line-height: 0.98;
+  }
+
+  .eyebrow {
+    font-size: 0.7rem;
+  }
+
+  .pronombres {
+    font-size: 0.68rem;
+    margin-top: 8px;
+  }
+
+  .titular {
+    font-size: 1.12rem;
+    margin: 10px 0 16px;
+  }
+
+  .lede {
+    font-size: 1rem;
+    line-height: 1.62;
+    margin-bottom: 20px;
+  }
+
+  .pastilla {
+    padding: 7px 12px;
+    font-size: 0.78rem;
+  }
+
+  .hero-nombre-linea {
+    gap: 8px;
+  }
+
+  .sello {
+    width: 44px;
+    height: 44px;
+  }
+
+  .sello-pop {
+    width: min(300px, calc(100vw - 36px));
+  }
+
+  .hero-ctas {
+    gap: 10px;
+    margin-bottom: 18px;
+  }
+
   .hero-ctas .btn {
-    flex: 1 1 auto;
+    flex: 1 1 100%;
+    min-height: 46px;
+    font-size: 0.9rem;
+  }
+
+  .redes {
+    gap: 8px;
+  }
+
+  .red {
+    min-height: 44px;
+    padding: 10px 14px;
+    font-size: 0.8rem;
+  }
+
+  .btn {
+    min-height: 44px;
+  }
+
+  .btn.mini {
+    min-height: 44px;
+    padding: 10px 14px;
+    font-size: 0.8rem;
+  }
+
+  .ficha-rapida {
+    padding: 18px;
+  }
+
+  .lista-check li {
+    font-size: 0.86rem;
+  }
+
+  button.chip,
+  .filtros .chip,
+  [data-filtros-aptitudes] .chip {
+    min-height: 44px;
+    padding: 10px 14px;
+    font-size: 0.8rem;
+  }
+
+  .chip-estatico {
+    min-height: 0;
+    padding: 5px 10px;
+    font-size: 0.74rem;
+  }
+
+  .filtros {
+    gap: 8px;
+  }
+
+  .traza {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    padding: 12px 14px;
+  }
+
+  .traza .enlace {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+
+  .rol-empresa {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding-block: 4px;
+  }
+
+  .rol-meta {
+    font-size: 0.7rem;
+    line-height: 1.5;
+  }
+
+  .rol-detalle summary {
+    min-height: 44px;
+    padding: 10px 0;
+    font-size: 0.82rem;
+  }
+
+  .linea > li {
+    padding-bottom: 30px;
+  }
+
+  .recomendacion {
+    padding: 18px;
+    gap: 16px;
+  }
+
+  .recomendacion-relacion {
+    font-size: 0.66rem;
+  }
+
+  .recomendacion-acciones .btn {
+    width: 100%;
+  }
+
+  .buscador input {
+    min-height: 46px;
+    font-size: 16px;
+  }
+
+  .buscador label {
+    font-size: 0.8rem;
+  }
+
+  .contador {
+    font-size: 0.66rem;
+  }
+
+  .aptitud {
+    padding: 16px;
+  }
+
+  .aptitud-fuente {
+    font-size: 0.6rem;
+  }
+
+  .aptitud-desc {
+    font-size: 0.8rem;
+  }
+
+  .aptitud-evidencia {
+    font-size: 0.72rem;
   }
 
   .aptitudes,
   .herramientas-lista {
     grid-template-columns: minmax(0, 1fr);
+  }
+
+  .herramienta {
+    padding: 11px 12px;
+  }
+
+  .herramienta strong {
+    font-size: 0.86rem;
+  }
+
+  .herramienta-contexto {
+    font-size: 0.76rem;
+  }
+
+  .herramienta-fuente {
+    font-size: 0.64rem;
+  }
+
+  .proyecto-visual {
+    min-height: 110px;
+    padding: 16px;
+  }
+
+  .proyecto-cuerpo {
+    padding: 18px;
+    gap: 8px;
+  }
+
+  .proyecto-desc {
+    font-size: 0.9rem;
+  }
+
+  .proyecto-stack,
+  .proyecto-meta {
+    font-size: 0.66rem;
+  }
+
+  .enlace-flecha {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 8px 0;
+    font-size: 0.82rem;
   }
 
   .seccion-panel,
@@ -1830,43 +2155,56 @@ a.rol-empresa:hover {
     border-radius: 16px;
   }
 
-  .contacto-lista li {
-    grid-template-columns: minmax(0, 1fr) auto;
+  .formacion-card {
+    flex-direction: column;
+    padding: 18px;
   }
 
-  .contacto-lista li > span {
-    grid-column: 1 / -1;
+  .formacion-centro {
+    font-size: 0.86rem;
   }
 
-  .dialogo-pdf {
-    width: calc(100vw - 16px);
-    max-height: calc(100dvh - 16px);
-    border-radius: 14px;
+  .formacion-meta {
+    font-size: 0.66rem;
   }
 
-  .pdf-cuerpo {
-    padding: 10px 12px 14px;
+  .formacion-actividades,
+  .formacion-diploma {
+    font-size: 0.82rem;
   }
 
-  .pdf-cuerpo iframe {
-    height: min(55vh, 520px);
-    min-height: 260px;
+  .certificado summary {
+    padding: 12px 0;
+    font-size: 0.88rem;
   }
 
-  .pdf-acciones a {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 44px;
-    padding: 10px 16px;
-    border: 1px solid var(--line);
-    border-radius: 999px;
-    font-size: 0.84rem;
-    font-weight: 600;
+  .cert-anio {
+    font-size: 0.66rem;
+  }
+
+  .cert-entidad {
+    font-size: 0.78rem;
+  }
+
+  .sub {
+    margin-top: 28px;
+  }
+
+  .idioma-badge {
+    font-size: 0.66rem;
+  }
+
+  .idioma-nivel {
+    font-size: 0.86rem;
+  }
+
+  .idioma-evidencia {
+    font-size: 0.78rem;
   }
 
   .voluntariado-card {
     flex-direction: column;
+    padding: 18px;
   }
 
   .voluntariado-card > .logo-empresa {
@@ -1874,8 +2212,209 @@ a.rol-empresa:hover {
     height: 34px;
   }
 
-  .formacion-card {
-    flex-direction: column;
+  .contacto-in h2 {
+    font-size: clamp(1.75rem, 8vw, 2.4rem);
+  }
+
+  .contacto-email {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 4px 0;
+    font-size: clamp(1.15rem, 2.9vw, 1.5rem);
+  }
+
+  .contacto-acciones {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .contacto-acciones .btn {
+    width: 100%;
+    min-height: 46px;
+  }
+
+  .contacto-nota {
+    font-size: 0.82rem;
+  }
+
+  .dialogo {
+    width: calc(100vw - 24px);
+    max-width: calc(100vw - 24px);
+    max-height: calc(100dvh - 24px);
+    margin: auto;
+    border-radius: 16px;
+  }
+
+  .dialogo-cab {
+    padding: 12px 16px;
+  }
+
+  .dialogo-cab h2 {
+    font-size: 1.08rem;
+  }
+
+  .dialogo-cab .icono {
+    width: 44px;
+    height: 44px;
+  }
+
+  .dialogo-cuerpo {
+    padding: 16px;
+  }
+
+  .contacto-lista {
+    gap: 0;
+    margin-top: 12px;
+  }
+
+  .contacto-lista li {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 8px 12px;
+    padding: 12px 0;
+    border-top: 1px solid var(--line);
+  }
+
+  .contacto-lista li:first-child {
+    border-top: 0;
+  }
+
+  .contacto-lista li > span {
+    grid-column: 1 / -1;
+    font-size: 0.66rem;
+  }
+
+  .contacto-lista a {
+    font-size: 0.84rem;
+    line-height: 1.4;
+  }
+
+  .contacto-lista button {
+    min-height: 44px;
+    padding: 8px 14px;
+    font-size: 0.76rem;
+  }
+
+  .dialogo-pdf {
+    width: calc(100vw - 16px);
+    max-width: calc(100vw - 16px);
+    max-height: calc(100dvh - 16px);
+    border-radius: 14px;
+  }
+
+  .pdf-cuerpo {
+    padding: 12px 14px 16px;
+  }
+
+  .pdf-cuerpo iframe {
+    height: min(52vh, 480px);
+    min-height: 240px;
+  }
+
+  .pdf-acciones a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 46px;
+    padding: 10px 16px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    font-size: 0.86rem;
+    font-weight: 600;
+  }
+
+  .pie-in {
+    padding: 16px 18px;
+    gap: 6px;
+    font-size: 0.82rem;
+  }
+
+  .pie-in p:last-child {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 2px 8px;
+  }
+
+  .pie-in .enlace,
+  .pie-in a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+
+  .toast {
+    max-width: calc(100vw - 32px);
+    text-align: center;
+  }
+}
+
+@media (max-width: 420px) {
+  .seccion-panel,
+  .seccion-tinta {
+    padding: 18px;
+  }
+}
+
+@media (max-width: 360px) {
+  .contacto-acciones {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .contacto-lista li {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .contacto-lista button {
+    justify-self: start;
+  }
+}
+
+@media (hover: none) and (pointer: coarse) {
+  .indice a,
+  .btn,
+  .red,
+  .rol-detalle summary,
+  .enlace-flecha,
+  .rol-empresa,
+  .marca,
+  .contacto-email,
+  .pie-in .enlace,
+  .pie-in a {
+    min-height: 44px;
+  }
+
+  .marca,
+  .contacto-email,
+  .pie-in .enlace,
+  .pie-in a {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .sello {
+    width: 44px;
+    height: 44px;
+  }
+
+  button.chip,
+  .filtros .chip,
+  [data-filtros-aptitudes] .chip {
+    min-height: 44px;
+    padding: 10px 14px;
+  }
+
+  .icono {
+    width: 44px;
+    height: 44px;
+  }
+
+  .idiomas button {
+    min-width: 44px;
+    min-height: 44px;
+    padding: 0 6px;
   }
 }
 

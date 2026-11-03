@@ -216,6 +216,43 @@
   margin: 24px auto 0;
 }
 
+@media (max-width: 560px) {
+  .puerta {
+    padding: 24px 22px;
+  }
+
+  .puerta h1 {
+    font-size: clamp(1.8rem, 8vw, 2.3rem);
+  }
+
+  .lede {
+    font-size: 0.95rem;
+    margin-bottom: 24px;
+  }
+
+  .campo input {
+    min-height: 50px;
+    font-size: 16px;
+  }
+
+  .campo .btn {
+    min-height: 48px;
+    font-size: 0.92rem;
+  }
+
+  .puerta-pie a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+
+  .ayuda,
+  .privacidad,
+  .puerta-pie {
+    font-size: 0.78rem;
+  }
+}
+
 @media (max-width: 480px) {
   .campo {
     flex-direction: column;

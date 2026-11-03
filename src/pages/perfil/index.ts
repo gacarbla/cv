@@ -689,7 +689,17 @@ function configurarIndice(raiz: Element): () => void {
   const enlaces = [...raiz.querySelectorAll<HTMLAnchorElement>("[data-seccion]")];
   if (enlaces.length === 0) return () => {};
   const secciones = [...raiz.querySelectorAll<HTMLElement>("section[id]")];
+  const indice = raiz.querySelector<HTMLElement>(".indice");
+  let activaPrevia = "";
   let ticking = false;
+  const centrar = (a: HTMLAnchorElement): void => {
+    if (!indice || indice.scrollWidth <= indice.clientWidth + 1) return;
+    const izquierda = a.offsetLeft - (indice.clientWidth - a.offsetWidth) / 2;
+    indice.scrollTo({
+      left: Math.max(0, izquierda),
+      behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
+    });
+  };
   const actualizar = (): void => {
     ticking = false;
     if (!raiz.isConnected) return;
@@ -699,11 +709,20 @@ function configurarIndice(raiz: Element): () => void {
     for (const s of secciones) {
       if (s.getBoundingClientRect().top <= margen) activa = s.id;
     }
+    // En el fondo de la página, la última sección manda. / At the page bottom, the last section wins.
+    if (window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 8) {
+      activa = secciones[secciones.length - 1]?.id ?? activa;
+    }
     for (const a of enlaces) {
       const on = a.dataset["seccion"] === activa;
       a.classList.toggle("activo", on);
       if (on) a.setAttribute("aria-current", "true");
       else a.removeAttribute("aria-current");
+    }
+    if (activa !== activaPrevia) {
+      const enlaceActivo = enlaces.find((a) => a.dataset["seccion"] === activa);
+      if (enlaceActivo) centrar(enlaceActivo);
+      activaPrevia = activa;
     }
   };
   const onScroll = (): void => {
@@ -729,6 +748,7 @@ function configurarIndice(raiz: Element): () => void {
       if (on) b.setAttribute("aria-current", "true");
       else b.removeAttribute("aria-current");
     }
+    centrar(a);
   };
   for (const a of enlaces) a.addEventListener("click", alPulsar);
   window.addEventListener("scroll", onScroll, { passive: true });

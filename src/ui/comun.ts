@@ -78,6 +78,7 @@ export function montarComun(raiz: ParentNode): void {
   pintarTema();
 
   const cajasIdioma = [...raiz.querySelectorAll<HTMLElement>("[data-idiomas]")];
+  const selectsIdioma = [...raiz.querySelectorAll<HTMLSelectElement>("[data-idioma-select]")];
   const pintarIdiomas = (): void => {
     for (const caja of cajasIdioma) {
       caja.textContent = "";
@@ -92,7 +93,16 @@ export function montarComun(raiz: ParentNode): void {
         caja.appendChild(b);
       }
     }
+    for (const sel of selectsIdioma) {
+      if (sel.options.length === 0) {
+        for (const lang of i18n.languages) sel.add(new Option(lang.toUpperCase(), lang));
+      }
+      sel.value = i18n.lang.value;
+    }
   };
+  for (const sel of selectsIdioma) {
+    sel.addEventListener("change", () => i18n.useLang(sel.value));
+  }
   pintarIdiomas();
   desuscripciones.push(i18n.onLang(pintarIdiomas));
   desuscripciones.push(
