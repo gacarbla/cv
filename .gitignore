@@ -1,0 +1,19 @@
+node_modules/
+.VSCodeCounter/
+
+# Salida de compilación: la publica CI en la rama web.
+# Build output: published by CI to the web branch.
+app/
+web/
+
+# Material privado: datos en claro, clave y QR imprimible.
+# Private material: plaintext data, key and printable QR.
+privado/
+salida/
+
+# Secretos y artefactos locales.
+# Local secrets and artifacts.
+.env
+.env.*
+*.key
+*.log

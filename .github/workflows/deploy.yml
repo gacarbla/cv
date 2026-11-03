@@ -1,0 +1,40 @@
+name: Publicar perfil privado en la rama web
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+concurrency:
+  group: publicar-cv
+  cancel-in-progress: true
+
+jobs:
+  publicar:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Descargar código / Checkout code
+        uses: actions/checkout@v4
+
+      - name: Instalar Node / Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Instalar dependencias / Install dependencies
+        run: npm ci
+
+      - name: Construir / Build
+        run: npm run build
+
+      - name: Publicar en la rama web / Publish to the web branch
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: web
+          publish_dir: ./web
+          force_orphan: true
+          cname: cv.gacarbla.es

@@ -1,0 +1,28 @@
+{
+  "name": "cv.gacarbla",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Perfil profesional privado de Gabriel Carro Blanco.",
+  "type": "commonjs",
+  "scripts": {
+    "build": "node -e \"require('fs').rmSync('app',{recursive:true,force:true})\" && tsc -p tsconfig.json && node -e \"require('fs').cpSync('src','app',{recursive:true,filter:(s)=>!s.endsWith('.ts')})\" && node scripts/empaquetar-web.js && node scripts/check-build.js",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "dev": "npx -y serve@14.2.4 . -l 8082",
+    "clave": "node tools/clave.mjs",
+    "recomendacion": "node tools/recomendacion.mjs",
+    "cifrar": "node tools/cifrar.mjs",
+    "qr": "node tools/qr.mjs",
+    "publicar": "node tools/publicar.mjs"
+  },
+  "keywords": [
+    "cv",
+    "perfil",
+    "gacarbla"
+  ],
+  "author": "Gabriel Carro Blanco",
+  "license": "UNLICENSED",
+  "devDependencies": {
+    "qrcode": "^1.5.4",
+    "typescript": "^5.6.3"
+  }
+}
