@@ -114,7 +114,6 @@ export function montarComun(raiz: ParentNode): void {
   aplicarTema(tema);
   pintarTema();
 
-  const cajasIdioma = [...raiz.querySelectorAll<HTMLElement>("[data-idiomas]")];
   const menusIdioma = [...raiz.querySelectorAll<HTMLElement>("[data-idioma-menu]")];
 
   const cerrarMenu = (menu: HTMLElement): void => {
@@ -127,19 +126,6 @@ export function montarComun(raiz: ParentNode): void {
   };
 
   const pintarIdiomas = (): void => {
-    for (const caja of cajasIdioma) {
-      caja.textContent = "";
-      for (const lang of i18n.languages) {
-        const b = document.createElement("button");
-        b.type = "button";
-        b.textContent = lang.toUpperCase();
-        b.className = lang === i18n.lang.value ? "on" : "";
-        b.setAttribute("aria-pressed", String(lang === i18n.lang.value));
-        b.setAttribute("aria-label", `${i18n.t("comun.idioma")}: ${lang.toUpperCase()}`);
-        b.addEventListener("click", () => i18n.use(lang));
-        caja.appendChild(b);
-      }
-    }
     for (const menu of menusIdioma) {
       const boton = menu.querySelector<HTMLButtonElement>("[data-idioma-toggle]");
       const lista = menu.querySelector<HTMLElement>("[data-idioma-lista]");

@@ -5,8 +5,8 @@ import { montarComun } from "../../ui/comun.js";
 import { fechaLarga } from "../../ui/formato.js";
 
 /**
- * Layout del perfil: cabecera, progreso de lectura y salida.
- * Profile layout: header, reading progress and sign-out.
+ * Layout del perfil: cabecera y salida.
+ * Profile layout: header and sign-out.
  */
 
 let limpiarLayout: (() => void) | null = null;
@@ -27,7 +27,6 @@ export async function mountPerfilLayout(target: Element): Promise<void> {
   montarComun(target);
 
   const cabecera = target.querySelector<HTMLElement>("[data-cabecera]");
-  const barra = target.querySelector<HTMLElement>("[data-progreso]");
   const limpiezas: Array<() => void> = [];
 
   // Datos del layout (nombre corto y fecha) tras recuperar la sesión.
@@ -69,14 +68,11 @@ export async function mountPerfilLayout(target: Element): Promise<void> {
   saltar?.addEventListener("click", alSaltar);
   limpiezas.push(() => saltar?.removeEventListener("click", alSaltar));
 
-  // Progreso de lectura y sombra de cabecera. / Reading progress and header shadow.
+  // Sombra de cabecera. / Header shadow.
   let ticking = false;
   const actualizar = (): void => {
     ticking = false;
     if (!cabecera?.isConnected) return;
-    const max = document.documentElement.scrollHeight - window.innerHeight;
-    const progreso = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
-    if (barra) barra.style.width = `${progreso * 100}%`;
     cabecera.toggleAttribute("data-scrolled", window.scrollY > 8);
   };
   const onScroll = (): void => {

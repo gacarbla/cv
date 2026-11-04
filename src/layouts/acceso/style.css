@@ -305,7 +305,7 @@ page {
 
 .idioma-menu {
   position: relative;
-  display: none;
+  display: inline-block;
 }
 
 .idioma-boton {

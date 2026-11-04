@@ -1654,6 +1654,419 @@ a.rol-empresa:hover {
   transform: none;
 }
 
+/* ---------- Editorial cleanup ---------- */
+
+.hero {
+  padding-block: clamp(48px, 7vw, 104px) clamp(28px, 4vw, 48px);
+}
+
+.hero h1 {
+  font-size: clamp(2.4rem, 5.4vw, 4.1rem);
+  letter-spacing: -0.035em;
+}
+
+.titular {
+  font-size: clamp(1.05rem, 1.6vw, 1.25rem);
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--ink);
+  max-width: 44rem;
+  margin: 14px 0 0;
+}
+
+.hero-estado {
+  font-size: 0.92rem;
+  line-height: 1.55;
+  color: var(--muted);
+  margin: 10px 0 0;
+}
+
+.hero-resumen {
+  font-size: 1rem;
+  line-height: 1.65;
+  color: var(--muted);
+  max-width: 60ch;
+  margin: 18px 0 24px;
+}
+
+.hero-datos {
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: var(--muted);
+  margin: 18px 0 0;
+}
+
+.redes {
+  gap: 8px 18px;
+}
+
+.red {
+  padding: 6px 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+}
+
+.red:hover {
+  color: var(--accent-texto);
+}
+
+.seccion-cab {
+  margin-bottom: 20px;
+}
+
+.seccion-cab h2 {
+  font-size: clamp(1.7rem, 3vw, 2.3rem);
+  letter-spacing: -0.025em;
+  margin: 0;
+}
+
+.seccion-nota {
+  font-size: 0.84rem;
+  line-height: 1.5;
+  color: var(--muted);
+  max-width: 52ch;
+  margin: 8px 0 0;
+}
+
+.prosa p {
+  font-size: 1rem;
+  line-height: 1.7;
+  max-width: 66ch;
+}
+
+.filtros {
+  gap: 0 18px;
+  margin-bottom: 16px;
+}
+
+.filtro {
+  min-width: 44px;
+  min-height: 44px;
+  border: 0;
+  border-bottom: 1px solid transparent;
+  border-radius: 0;
+  background: none;
+  color: var(--muted);
+  font: inherit;
+  font-size: 0.84rem;
+  padding: 8px 0;
+  cursor: pointer;
+}
+
+.filtro:hover {
+  color: var(--ink);
+}
+
+.filtro[aria-pressed="true"] {
+  color: var(--ink);
+  border-bottom-color: var(--accent);
+  font-weight: 600;
+}
+
+.linea > li {
+  padding-left: 36px;
+}
+
+.linea > li::before {
+  content: "";
+  position: absolute;
+  top: 7px;
+  left: 14px;
+  width: 10px;
+  height: 10px;
+  border: 2px solid var(--line);
+  border-radius: 50%;
+  background: var(--paper);
+}
+
+.linea > li:first-child::before,
+.linea > li.traza::before {
+  border-color: var(--accent);
+  background: var(--accent);
+}
+
+.proyecto.destacado {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.rol-cab {
+  gap: 0;
+}
+
+.rol-puesto {
+  font-size: 1.08rem;
+}
+
+.rol-empresa {
+  font-size: 0.9rem;
+  margin-top: 6px;
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
+.rol-meta,
+.rol-ubicacion {
+  font-family: inherit;
+  font-size: 0.8rem;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--muted);
+  margin: 6px 0 0;
+}
+
+.rol-resumen {
+  font-size: 0.95rem;
+  margin-top: 12px;
+}
+
+.rol-detalle summary {
+  color: var(--ink);
+  font-size: 0.84rem;
+}
+
+.rol-detalle summary::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  transform: rotate(45deg);
+  margin-right: 5px;
+}
+
+.rol-detalle[open] summary::before {
+  transform: rotate(225deg);
+}
+
+.rol-herramientas {
+  font-size: 0.8rem;
+}
+
+.recomendacion {
+  border: 0;
+  border-top: 1px solid var(--line);
+  border-radius: 0;
+  background: transparent;
+  padding: 24px 0;
+}
+
+.recomendacion blockquote {
+  font-size: clamp(1.05rem, 1.8vw, 1.2rem);
+}
+
+.recomendacion-relacion {
+  font-family: inherit;
+  font-size: 0.78rem;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.aptitudes {
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 0 32px;
+  margin-top: 0;
+}
+
+.aptitud {
+  border: 0;
+  border-top: 1px solid var(--line);
+  border-radius: 0;
+  background: transparent;
+  padding: 16px 0;
+  gap: 6px;
+}
+
+.aptitud:hover {
+  transform: none;
+  border-color: var(--line);
+  box-shadow: none;
+}
+
+.aptitud.trazando {
+  border-top-color: var(--accent);
+  box-shadow: none;
+}
+
+.aptitud-nombre {
+  font-size: 0.9rem;
+}
+
+.aptitud-desc {
+  font-size: 0.82rem;
+}
+
+.aptitud-evidencia {
+  font-family: inherit;
+  font-size: 0.78rem;
+  letter-spacing: 0;
+  text-transform: none;
+  opacity: 1;
+}
+
+.herramientas {
+  margin-top: 28px;
+}
+
+.herramientas-lista {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 32px;
+}
+
+.herramienta {
+  border: 0;
+  border-top: 1px solid var(--line);
+  border-radius: 0;
+  background: transparent;
+  padding: 12px 0;
+}
+
+.herramienta-contexto {
+  font-size: 0.8rem;
+}
+
+.proyecto-stack,
+.proyecto-meta {
+  font-family: inherit;
+  font-size: 0.78rem;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--muted);
+}
+
+.proyecto-desc {
+  font-size: 0.9rem;
+}
+
+.proyecto-acciones {
+  gap: 16px;
+}
+
+.enlace-flecha {
+  font-size: 0.84rem;
+}
+
+.formacion-card {
+  border: 0;
+  border-top: 1px solid var(--line);
+  border-radius: 0;
+  background: transparent;
+  padding: 20px 0;
+}
+
+.formacion-card.aprendizaje {
+  background: transparent;
+}
+
+.formacion-meta,
+.formacion-centro {
+  font-family: inherit;
+  font-size: 0.82rem;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.formacion-centro {
+  color: var(--ink);
+}
+
+.formacion-foco {
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: var(--muted);
+  margin: 10px 0 0;
+}
+
+.certificado summary {
+  font-size: 0.9rem;
+}
+
+.cert-anio {
+  font-family: inherit;
+  font-size: 0.78rem;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.cert-entidad {
+  font-size: 0.8rem;
+}
+
+.certificado summary::after {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-right: 1.5px solid var(--accent-texto);
+  border-bottom: 1.5px solid var(--accent-texto);
+  transform: rotate(45deg);
+}
+
+.certificado[open] summary::after {
+  transform: rotate(225deg);
+}
+
+.idiomas-lista {
+  gap: 0 32px;
+}
+
+.idioma {
+  border: 0;
+  border-top: 1px solid var(--line);
+  border-radius: 0;
+  background: transparent;
+  padding: 14px 0;
+}
+
+.idioma-cab h3 {
+  font-size: 1rem;
+}
+
+.idioma-nivel {
+  font-size: 0.84rem;
+}
+
+.idioma-evidencia {
+  font-size: 0.8rem;
+}
+
+.voluntariado-card {
+  border: 0;
+  border-top: 1px solid var(--line);
+  border-radius: 0;
+  background: transparent;
+  padding: 20px 0;
+}
+
+.contacto-texto {
+  font-size: 1rem;
+  line-height: 1.65;
+  color: color-mix(in srgb, var(--tinta-texto) 72%, transparent);
+  max-width: 46ch;
+  margin: 0 auto 20px;
+}
+
+.contacto-lista li > span {
+  font-family: inherit;
+  font-size: 0.68rem;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.pie-in {
+  gap: 4px 20px;
+  font-size: 0.8rem;
+}
+
+.pie-in p {
+  margin: 0;
+}
+
+.pie-in p:last-child {
+  display: block;
+}
+
 /* ---------- Responsive ---------- */
 
 @media (max-width: 900px) {
@@ -1743,7 +2156,7 @@ a.rol-empresa:hover {
 
   .indice {
     flex-direction: row;
-    gap: 6px;
+    gap: 18px;
     border-left: 0;
     overflow-x: auto;
     scrollbar-width: none;
@@ -1762,17 +2175,19 @@ a.rol-empresa:hover {
     align-items: center;
     justify-content: center;
     min-height: 44px;
-    padding: 10px 14px;
-    border: 1px solid var(--line);
-    border-radius: 999px;
+    padding: 10px 2px;
+    border: 0;
+    border-bottom: 2px solid transparent;
+    border-radius: 0;
     white-space: nowrap;
-    font-size: 0.8rem;
+    font-size: 0.82rem;
   }
 
   .indice a.activo {
-    background: var(--ink);
-    color: var(--paper);
-    border-color: var(--ink);
+    background: none;
+    color: var(--ink);
+    border-color: transparent;
+    border-bottom-color: var(--accent);
   }
 
   .indice a.activo::before {
@@ -1859,7 +2274,11 @@ a.rol-empresa:hover {
   }
 
   .linea > li {
-    padding-left: 52px;
+    padding-left: 32px;
+  }
+
+  .linea > li::before {
+    left: 11px;
   }
 
   .linea > li > .logo-empresa {
@@ -1959,7 +2378,7 @@ a.rol-empresa:hover {
 
   .titular {
     font-size: 1.12rem;
-    margin: 10px 0 16px;
+    margin: 10px 0 0;
   }
 
   .lede {
@@ -2067,7 +2486,12 @@ a.rol-empresa:hover {
   }
 
   .filtros {
-    gap: 8px;
+    gap: 0 16px;
+  }
+
+  .filtro {
+    min-height: 44px;
+    padding: 10px 0;
   }
 
   .traza {
@@ -2106,7 +2530,7 @@ a.rol-empresa:hover {
   }
 
   .recomendacion {
-    padding: 18px;
+    padding: 20px 0;
     gap: 16px;
   }
 
@@ -2153,7 +2577,7 @@ a.rol-empresa:hover {
   }
 
   .herramienta {
-    padding: 11px 12px;
+    padding: 12px 0;
   }
 
   .herramienta strong {
@@ -2203,7 +2627,7 @@ a.rol-empresa:hover {
 
   .formacion-card {
     flex-direction: column;
-    padding: 18px;
+    padding: 18px 0;
   }
 
   .formacion-centro {
@@ -2250,7 +2674,7 @@ a.rol-empresa:hover {
 
   .voluntariado-card {
     flex-direction: column;
-    padding: 18px;
+    padding: 16px 0;
   }
 
   .voluntariado-card > .logo-empresa {
@@ -2378,10 +2802,7 @@ a.rol-empresa:hover {
   }
 
   .pie-in p:last-child {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 2px 8px;
+    display: block;
   }
 
   .pie-in .enlace,

@@ -383,7 +383,7 @@ page {
 
 .idioma-menu {
   position: relative;
-  display: none;
+  display: inline-block;
 }
 
 .idioma-boton {
@@ -517,23 +517,6 @@ page {
 
 .idioma-opcion.on .idioma-check {
   opacity: 1;
-}
-
-.progreso {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: -1px;
-  height: 2px;
-  pointer-events: none;
-}
-
-.progreso span {
-  display: block;
-  height: 100%;
-  width: 0;
-  background: var(--accent);
-  transition: width 0.1s linear;
 }
 
 .pie {
@@ -720,7 +703,6 @@ page {
   }
 
   .cabecera,
-  .progreso span,
   .btn,
   .saltar {
     transition: none;

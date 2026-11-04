@@ -2,43 +2,15 @@
   <section class="hero" aria-labelledby="hero-nombre">
     <div class="hero-grid">
       <div class="hero-texto">
-        <p class="eyebrow" data-campo="eyebrow"></p>
-        <div class="hero-nombre-linea">
-          <h1 id="hero-nombre" data-campo="nombre"></h1>
-          <button class="sello" type="button" data-accion="sello" aria-describedby="sello-info" data-i18n-aria-label="hero.verificado" aria-label="Verificado" aria-expanded="false">
-            <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z"></path>
-              <path d="m16 9-5.5 5.5L8 12"></path>
-            </svg>
-          </button>
-          <div class="sello-pop" id="sello-info" role="tooltip" hidden>
-            <span data-campo="verificadoNota"></span>
-            <a data-url="linkedinPerfil" href="#" target="_blank" rel="noopener noreferrer">LinkedIn</a>
-          </div>
-        </div>
-        <p class="pronombres" data-campo="pronombres"></p>
+        <h1 id="hero-nombre" data-campo="nombre"></h1>
         <p class="titular" data-campo="titular"></p>
-        <div class="estado-linea">
-          <span class="pastilla estado">
-            <span class="punto" aria-hidden="true"></span>
-            <span class="pastilla-larga" data-campo="estado"></span>
-            <span class="pastilla-corta" data-i18n="hero.estadoCorto"></span>
-          </span>
-          <span class="pastilla suave">
-            <span class="pastilla-larga" data-campo="modalidad"></span>
-            <span class="pastilla-corta" data-i18n="hero.modalidadCorta"></span>
-          </span>
-          <span class="pastilla suave">
-            <span class="pastilla-larga" data-campo="disponibilidad"></span>
-            <span class="pastilla-corta" data-i18n="hero.disponibilidadCorta"></span>
-          </span>
-        </div>
-        <p class="lede" data-campo="resumenCorto"></p>
+        <p class="hero-estado" data-campo="estadoLinea"></p>
+        <p class="hero-resumen" data-campo="resumenCorto"></p>
         <div class="hero-ctas">
-          <button class="btn primario" type="button" data-accion="contacto" data-i18n="hero.contacto">Contacto</button>
-          <button class="btn fantasma" type="button" data-accion="copiar-email" data-i18n="hero.copiarEmail">Copiar correo</button>
+          <button class="btn primario" type="button" data-accion="ir-contacto" data-i18n="hero.contacto">Contacto</button>
         </div>
         <div class="redes" data-redes data-i18n-aria-label="hero.redes" aria-label="Redes y enlaces"></div>
+        <p class="hero-datos" data-campo="datosHeroe"></p>
       </div>
     </div>
     <div class="hero-adorno" aria-hidden="true">
@@ -46,61 +18,32 @@
     </div>
   </section>
 
-  <div class="franja-meta" role="list">
-    <div role="listitem">
-      <span class="meta-label" data-i18n="meta.ubicacion">Ubicación</span>
-      <span class="meta-valor" data-campo="ubicacion"></span>
-    </div>
-    <div role="listitem">
-      <span class="meta-label" data-i18n="meta.idiomas">Idiomas</span>
-      <span class="meta-valor" data-campo="idiomasResumen"></span>
-    </div>
-    <div role="listitem">
-      <span class="meta-label" data-i18n="meta.actualizado">Actualizado</span>
-      <span class="meta-valor"><time data-campo="actualizado"></time></span>
-    </div>
-  </div>
-
   <div class="perfil-grid">
     <aside class="riel" aria-label="Secciones">
       <nav class="indice" data-indice>
-        <a href="#resumen" data-seccion="resumen" class="activo"><span class="num">01</span><span data-i18n="nav.resumen">Resumen</span></a>
-        <a href="#experiencia" data-seccion="experiencia"><span class="num">02</span><span data-i18n="nav.experiencia">Experiencia</span></a>
-        <a href="#recomendaciones" data-seccion="recomendaciones"><span class="num">03</span><span data-i18n="nav.recomendaciones">Recomendaciones</span></a>
-        <a href="#competencias" data-seccion="competencias"><span class="num">04</span><span data-i18n="nav.competencias">Competencias</span></a>
-        <a href="#proyectos" data-seccion="proyectos"><span class="num">05</span><span data-i18n="nav.proyectos">Proyectos</span></a>
-        <a href="#formacion" data-seccion="formacion"><span class="num">06</span><span data-i18n="nav.formacion">Formación</span></a>
-        <a href="#idiomas" data-seccion="idiomas"><span class="num">07</span><span data-i18n="nav.idiomas">Idiomas</span></a>
-        <a href="#voluntariado" data-seccion="voluntariado"><span class="num">08</span><span data-i18n="nav.voluntariado">Voluntariado</span></a>
-        <a href="#contacto" data-seccion="contacto"><span class="num">09</span><span data-i18n="nav.contacto">Contacto</span></a>
+        <a href="#resumen" data-seccion="resumen" class="activo"><span data-i18n="nav.resumen">Resumen</span></a>
+        <a href="#experiencia" data-seccion="experiencia"><span data-i18n="nav.experiencia">Experiencia</span></a>
+        <a href="#recomendaciones" data-seccion="recomendaciones"><span data-i18n="nav.recomendaciones">Recomendaciones</span></a>
+        <a href="#competencias" data-seccion="competencias"><span data-i18n="nav.competencias">Competencias</span></a>
+        <a href="#proyectos" data-seccion="proyectos"><span data-i18n="nav.proyectos">Proyectos</span></a>
+        <a href="#formacion" data-seccion="formacion"><span data-i18n="nav.formacion">Formación</span></a>
+        <a href="#idiomas" data-seccion="idiomas"><span data-i18n="nav.idiomas">Idiomas</span></a>
+        <a href="#voluntariado" data-seccion="voluntariado"><span data-i18n="nav.voluntariado">Voluntariado</span></a>
+        <a href="#contacto" data-seccion="contacto"><span data-i18n="nav.contacto">Contacto</span></a>
       </nav>
-      <div class="riel-acciones">
-        <button class="btn mini" type="button" data-accion="contacto" data-i18n="comun.contacto">Contacto</button>
-      </div>
     </aside>
 
     <div class="perfil-contenido">
       <section id="resumen" class="seccion" aria-labelledby="resumen-t">
         <header class="seccion-cab">
-          <p class="eyebrow" data-i18n="resumen.eyebrow">En 20 segundos</p>
           <h2 id="resumen-t" data-i18n="resumen.titulo">Resumen</h2>
-          <p class="lede" data-i18n="resumen.lede">Lo esencial, sin rodeos.</p>
         </header>
-        <div class="resumen-grid">
-          <div class="prosa" data-campo="sobreMi"></div>
-          <aside class="ficha-rapida">
-            <p class="ficha-label" data-i18n="resumen.ficha">En una línea</p>
-            <ul class="lista-check" data-lista="resumen20"></ul>
-            <div class="chips" data-lista="areas"></div>
-          </aside>
-        </div>
+        <div class="prosa" data-campo="sobreMi"></div>
       </section>
 
       <section id="experiencia" class="seccion" aria-labelledby="experiencia-t">
         <header class="seccion-cab">
-          <p class="eyebrow" data-i18n="experiencia.eyebrow">Trayectoria</p>
           <h2 id="experiencia-t" data-i18n="experiencia.titulo">Experiencia</h2>
-          <p class="lede" data-i18n="experiencia.lede">Tres etapas, una misma idea: ordenar la información y resolver.</p>
         </header>
         <div class="filtros" data-filtros-experiencia role="group" data-i18n-aria-label="experiencia.filtro" aria-label="Filtrar por área"></div>
         <p class="traza" data-traza role="status" aria-live="polite" hidden></p>
@@ -110,18 +53,14 @@
 
       <section id="recomendaciones" class="seccion" aria-labelledby="recomendaciones-t">
         <header class="seccion-cab">
-          <p class="eyebrow" data-i18n="recomendaciones.eyebrow">Referencias</p>
           <h2 id="recomendaciones-t" data-i18n="recomendaciones.titulo">Recomendaciones</h2>
-          <p class="lede" data-i18n="recomendaciones.lede">Una carta firmada por un responsable directo.</p>
         </header>
         <div class="recomendaciones" data-lista="recomendaciones"></div>
       </section>
 
-      <section id="competencias" class="seccion seccion-panel" aria-labelledby="competencias-t">
+      <section id="competencias" class="seccion" aria-labelledby="competencias-t">
         <header class="seccion-cab">
-          <p class="eyebrow" data-i18n="aptitudes.eyebrow">Competencias</p>
           <h2 id="competencias-t" data-i18n="aptitudes.titulo">Aptitudes y competencias</h2>
-          <p class="lede" data-i18n="aptitudes.lede">No es una lista de deseos: cada competencia enlaza con dónde la he usado.</p>
         </header>
         <div class="buscador">
           <label for="buscar-aptitud" data-i18n="aptitudes.buscar">Buscar competencia</label>
@@ -141,18 +80,15 @@
 
       <section id="proyectos" class="seccion" aria-labelledby="proyectos-t">
         <header class="seccion-cab">
-          <p class="eyebrow" data-i18n="proyectos.eyebrow">Aprendizaje personal</p>
           <h2 id="proyectos-t" data-i18n="proyectos.titulo">Proyectos</h2>
-          <p class="lede" data-i18n="proyectos.lede">Proyectos propios de aprendizaje, en distintos estados. No son experiencia profesional formal.</p>
+          <p class="seccion-nota" data-i18n="proyectos.lede">Proyectos personales de aprendizaje. No son experiencia profesional.</p>
         </header>
         <div class="proyectos" data-lista="proyectos"></div>
       </section>
 
       <section id="formacion" class="seccion" aria-labelledby="formacion-t">
         <header class="seccion-cab">
-          <p class="eyebrow" data-i18n="formacion.eyebrow">Base</p>
           <h2 id="formacion-t" data-i18n="formacion.titulo">Formación</h2>
-          <p class="lede" data-i18n="formacion.lede">Títulos y certificados verificables por su identificador.</p>
         </header>
         <div class="formacion-grid">
           <div data-lista="formacion"></div>
@@ -164,27 +100,21 @@
 
       <section id="idiomas" class="seccion" aria-labelledby="idiomas-t">
         <header class="seccion-cab">
-          <p class="eyebrow" data-i18n="idiomas.eyebrow">Comunicación</p>
           <h2 id="idiomas-t" data-i18n="idiomas.titulo">Idiomas</h2>
-          <p class="lede" data-i18n="idiomas.lede">Niveles confirmados; el inglés está acreditado con certificado.</p>
         </header>
         <div class="idiomas-lista" data-lista="idiomas"></div>
       </section>
 
       <section id="voluntariado" class="seccion" aria-labelledby="voluntariado-t">
         <header class="seccion-cab">
-          <p class="eyebrow" data-i18n="voluntariado.eyebrow">Comunidad</p>
           <h2 id="voluntariado-t" data-i18n="voluntariado.titulo">Voluntariado</h2>
-          <p class="lede" data-i18n="voluntariado.lede">Lo que hice fuera del horario laboral también cuenta.</p>
         </header>
         <div class="voluntariado" data-lista="voluntariado"></div>
       </section>
 
       <section id="contacto" class="seccion seccion-tinta" aria-labelledby="contacto-t">
         <div class="contacto-in">
-          <p class="eyebrow" data-i18n="contacto.eyebrow">Contacto</p>
           <h2 id="contacto-t" data-i18n="contacto.titulo">Hablemos por correo.</h2>
-          <p class="lede" data-i18n="contacto.lede">Si hay un puesto, un proyecto o una pregunta, escríbeme.</p>
           <a class="contacto-email" data-campo="email" href="#"></a>
           <div class="contacto-acciones">
             <button class="btn primario" type="button" data-accion="copiar-email" data-i18n="contacto.copiar">Copiar correo</button>
@@ -198,40 +128,6 @@
     </div>
   </div>
 </div>
-
-<dialog class="dialogo" data-dialogo-contacto aria-labelledby="dialogo-t">
-  <div class="dialogo-cab">
-    <h2 id="dialogo-t" data-i18n="contacto.dialogoTitulo">Contacto</h2>
-    <button class="icono" type="button" data-accion="cerrar-dialogo" data-i18n-aria-label="comun.cerrar" aria-label="Cerrar">
-      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        <path d="M18 6 6 18"></path>
-        <path d="m6 6 12 12"></path>
-      </svg>
-    </button>
-  </div>
-  <div class="dialogo-cuerpo">
-    <p data-i18n="contacto.dialogoTexto">Elige el canal que prefieras. Respondo antes por correo.</p>
-    <ul class="contacto-lista">
-      <li>
-        <span data-i18n="contacto.email">Correo</span>
-        <a data-campo="email" href="#"></a>
-        <button type="button" data-accion="copiar-email" data-i18n="comun.copiar">Copiar</button>
-      </li>
-      <li>
-        <span data-i18n="contacto.linkedin">LinkedIn</span>
-        <a data-url="linkedin" href="#" target="_blank" rel="noopener noreferrer">linkedin.com/in/gabriel-carro-blanco</a>
-      </li>
-      <li>
-        <span data-i18n="contacto.github">GitHub</span>
-        <a data-url="github" href="#" target="_blank" rel="noopener noreferrer">github.com/gacarbla</a>
-      </li>
-      <li>
-        <span data-i18n="contacto.web">Web</span>
-        <a data-url="web" href="#" target="_blank" rel="noopener noreferrer">gacarbla.es</a>
-      </li>
-    </ul>
-  </div>
-</dialog>
 
 <dialog class="dialogo dialogo-pdf" data-dialogo-pdf aria-labelledby="pdf-t">
   <div class="dialogo-cab">

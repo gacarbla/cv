@@ -2,7 +2,7 @@ import { mountPage } from "../../lib/rtw/index.js";
 import { i18n } from "../../lang/index.js";
 import { cargarPerfil } from "../../datos/sesion.js";
 import { t, tl } from "../../datos/idioma.js";
-import type { Aptitud, Certificacion, Experiencia, Perfil, Proyecto, Recomendacion } from "../../datos/tipos.js";
+import type { Certificacion, Perfil } from "../../datos/tipos.js";
 import { crear, enlace, iconoSvg, normalizarTexto, vaciar } from "../../ui/dom.js";
 import { fechaLarga } from "../../ui/formato.js";
 
@@ -40,13 +40,6 @@ function setUrl(raiz: ParentNode, clave: string, url: string): void {
   }
 }
 
-/** Etiqueta de la fuente de una competencia. / Skill source label. */
-function fuenteLabel(fuente: Aptitud["fuente"]): string {
-  if (fuente === "linkedin") return i18n.t("aptitudes.fuenteLinkedin");
-  if (fuente === "proyecto") return i18n.t("aptitudes.fuenteProyecto");
-  return i18n.t("aptitudes.fuenteExperiencia");
-}
-
 /** Nombre de una competencia por id. / Skill name by id. */
 function nombreAptitud(id: string): string {
   const a = datos?.aptitudes.find((x) => x.id === id);
@@ -60,18 +53,13 @@ function nombreEvidencia(ids: string[]): string {
   return ids
     .map((id) => {
       const exp = d.experiencia.find((e) => e.id === id);
-      if (exp) return `${exp.empresa} · ${t(exp.insignia)}`;
+      if (exp) return exp.empresa;
       const pro = d.proyectos.find((p) => p.id === id);
-      if (pro) return `${i18n.t("aptitudes.fuenteProyecto")} · ${pro.nombre}`;
+      if (pro) return `${i18n.t("aptitudes.fuenteProyecto")}, ${pro.nombre}`;
       return "";
     })
     .filter(Boolean)
-    .join(" · ");
-}
-
-/** Chip estático. / Static chip. */
-function chip(texto: string, titulo = ""): HTMLSpanElement {
-  return crear("span", { class: "chip chip-estatico", text: texto, attrs: { title: titulo || null } });
+    .join("; ");
 }
 
 /** Pinta las redes y enlaces. / Paints social and contact links. */
@@ -122,12 +110,10 @@ function pintarExperiencia(raiz: ParentNode, d: Perfil): void {
         style: `--logo-color: ${exp.color}`,
       },
     });
-    const logo = crear("span", { class: "logo-empresa", text: exp.logo });
     const cuerpo = crear("div", { class: "rol-cuerpo" });
     const cab = crear("div", { class: "rol-cab" });
     const titulo = crear("h3", { class: "rol-puesto", text: t(exp.puesto) });
-    const insignia = crear("span", { class: "insignia", text: t(exp.insignia) });
-    cab.append(titulo, insignia);
+    cab.append(titulo);
 
     const empresa = exp.empresaUrl
       ? crear("a", {
@@ -137,8 +123,8 @@ function pintarExperiencia(raiz: ParentNode, d: Perfil): void {
         })
       : crear("span", { class: "rol-empresa", text: exp.empresa });
 
-    const meta = crear("p", { class: "rol-meta", text: `${t(exp.tipo)} · ${t(exp.fechas)} · ${t(exp.duracion)}` });
-    const ubicacion = crear("p", { class: "rol-ubicacion", text: `${t(exp.ubicacion)} · ${t(exp.modalidad)}` });
+    const meta = crear("p", { class: "rol-meta", text: `${t(exp.tipo)}. ${t(exp.fechas)} (${t(exp.duracion)}).` });
+    const ubicacion = crear("p", { class: "rol-ubicacion", text: `${t(exp.ubicacion)}. ${t(exp.modalidad)}.` });
     const resumen = crear("p", { class: "rol-resumen", text: t(exp.resumen) });
 
     const abierto = abiertos.has(exp.id);
@@ -149,7 +135,7 @@ function pintarExperiencia(raiz: ParentNode, d: Perfil): void {
     for (const logro of tl(exp.logros)) logros.append(crear("li", { text: logro }));
     const herramientas = crear("p", { class: "rol-herramientas" });
     herramientas.append(crear("strong", { text: `${i18n.t("experiencia.herramientas")}: ` }));
-    herramientas.append(document.createTextNode(exp.herramientas.join(" · ")));
+    herramientas.append(document.createTextNode(exp.herramientas.join(", ")));
     dentro.append(logros, herramientas);
     detalle.append(summary, dentro);
     detalle.addEventListener("toggle", () => {
@@ -159,7 +145,7 @@ function pintarExperiencia(raiz: ParentNode, d: Perfil): void {
     });
 
     cuerpo.append(cab, empresa, meta, ubicacion, resumen, detalle);
-    li.append(logo, cuerpo);
+    li.append(cuerpo);
     lista.append(li);
   }
 
@@ -172,7 +158,7 @@ function pintarExperiencia(raiz: ParentNode, d: Perfil): void {
     );
     for (const op of opciones) {
       const b = crear("button", {
-        class: "chip",
+        class: "filtro",
         text: op.label,
         attrs: { type: "button", "data-filtro-area": op.id, "aria-pressed": String(filtroArea === op.id) },
       });
@@ -200,24 +186,10 @@ function pintarAptitudes(raiz: ParentNode, d: Perfil): void {
       });
       const top = crear("span", { class: "aptitud-top" });
       top.append(crear("span", { class: "aptitud-nombre", text: t(a.nombre) }));
-      top.append(crear("span", { class: `aptitud-fuente fuente-${a.fuente}`, text: fuenteLabel(a.fuente) }));
       boton.append(top);
       boton.append(crear("span", { class: "aptitud-desc", text: t(a.descripcion) }));
       const ev = nombreEvidencia(a.evidencia);
       if (ev) boton.append(crear("span", { class: "aptitud-evidencia", text: ev }));
-      if (a.validaciones > 0) {
-        const valid = crear("span", { class: "aptitud-validacion" });
-        valid.append(iconoSvg("check", 12));
-        valid.append(
-          crear("span", {
-            text:
-              a.validaciones === 1
-                ? i18n.t("aptitudes.validacion")
-                : i18n.t("aptitudes.validaciones", { n: a.validaciones }),
-          }),
-        );
-        boton.append(valid);
-      }
       caja.append(boton);
     }
   }
@@ -232,7 +204,7 @@ function pintarAptitudes(raiz: ParentNode, d: Perfil): void {
     for (const op of opciones) {
       filtros.append(
         crear("button", {
-          class: "chip",
+          class: "filtro",
           text: op.label,
           attrs: {
             type: "button",
@@ -251,7 +223,6 @@ function pintarAptitudes(raiz: ParentNode, d: Perfil): void {
       const li = crear("li", { class: "herramienta" });
       li.append(crear("strong", { text: h.nombre }));
       li.append(crear("span", { class: "herramienta-contexto", text: t(h.contexto) }));
-      li.append(crear("span", { class: "herramienta-fuente", text: t(h.fuente) }));
       herramientas.append(li);
     }
   }
@@ -265,21 +236,17 @@ function pintarProyectos(raiz: ParentNode, d: Perfil): void {
   for (const p of d.proyectos) {
     const card = crear("article", {
       class: `proyecto${p.destacado ? " destacado" : ""}`,
-      attrs: { style: `--proyecto-color: ${p.color}` },
     });
-    const visual = crear("div", { class: "proyecto-visual" });
-    visual.append(crear("span", { class: "proyecto-logo", text: p.logo }));
-    const stack = crear("p", { class: "proyecto-stack", text: p.stack.join(" · ") });
-    visual.append(stack);
     const cuerpo = crear("div", { class: "proyecto-cuerpo" });
     cuerpo.append(crear("h3", { text: p.nombre }));
     cuerpo.append(crear("p", { class: "proyecto-desc", text: t(p.descripcion) }));
-    cuerpo.append(crear("p", { class: "proyecto-meta", text: `${p.anio} · ${t(p.estado)}` }));
+    cuerpo.append(crear("p", { class: "proyecto-stack", text: p.stack.join(", ") }));
+    cuerpo.append(crear("p", { class: "proyecto-meta", text: `${p.anio}. ${t(p.estado)}.` }));
     const acciones = crear("div", { class: "proyecto-acciones" });
     if (p.repo) acciones.append(enlace(i18n.t("proyectos.verRepo"), p.repo, "enlace-flecha"));
     if (p.demo) acciones.append(enlace(i18n.t("proyectos.verWeb"), p.demo, "enlace-flecha"));
     cuerpo.append(acciones);
-    card.append(visual, cuerpo);
+    card.append(cuerpo);
     caja.append(card);
   }
 }
@@ -290,18 +257,14 @@ function pintarFormacion(raiz: ParentNode, d: Perfil): void {
   if (caja) {
     vaciar(caja);
     const f = d.formacion;
-    const card = crear("article", {
-      class: "formacion-card",
-      attrs: { style: `--logo-color: ${f.color}` },
-    });
-    const logo = crear("span", { class: "logo-empresa", text: f.logo });
+    const card = crear("article", { class: "formacion-card" });
     const cuerpo = crear("div", { class: "formacion-cuerpo" });
     cuerpo.append(crear("h3", { text: t(f.titulo) }));
     cuerpo.append(crear("p", { class: "formacion-centro", text: f.centro }));
-    cuerpo.append(crear("p", { class: "formacion-meta", text: `${t(f.fechas)} · ${t(f.ubicacion)}` }));
+    cuerpo.append(crear("p", { class: "formacion-meta", text: `${t(f.fechas)}. ${t(f.ubicacion)}.` }));
     cuerpo.append(crear("p", { class: "formacion-actividades", text: `${i18n.t("formacion.actividades")}: ${t(f.actividades)}` }));
     cuerpo.append(crear("p", { class: "formacion-diploma", text: `${i18n.t("formacion.diploma")}: ${t(f.diploma)}` }));
-    card.append(logo, cuerpo);
+    card.append(cuerpo);
     caja.append(card);
   }
 
@@ -309,19 +272,13 @@ function pintarFormacion(raiz: ParentNode, d: Perfil): void {
   if (cajaA) {
     vaciar(cajaA);
     const a = d.aprendizaje;
-    const card = crear("article", {
-      class: "formacion-card aprendizaje",
-      attrs: { style: "--logo-color: #b3541e" },
-    });
-    const logo = crear("span", { class: "logo-empresa", text: "A" });
+    const card = crear("article", { class: "formacion-card aprendizaje" });
     const cuerpo = crear("div", { class: "formacion-cuerpo" });
     cuerpo.append(crear("h3", { text: t(a.titulo) }));
-    cuerpo.append(crear("p", { class: "formacion-centro", text: `${i18n.t("formacion.aprendizaje")} · ${a.desde}` }));
+    cuerpo.append(crear("p", { class: "formacion-centro", text: `${a.desde}.` }));
     cuerpo.append(crear("p", { class: "formacion-actividades", text: t(a.descripcion) }));
-    const foco = crear("div", { class: "chips" });
-    for (const item of a.foco) foco.append(chip(item));
-    cuerpo.append(foco);
-    card.append(logo, cuerpo);
+    if (a.foco.length > 0) cuerpo.append(crear("p", { class: "formacion-foco", text: a.foco.join(", ") }));
+    card.append(cuerpo);
     cajaA.append(card);
   }
 }
@@ -363,7 +320,6 @@ function pintarIdiomas(raiz: ParentNode, d: Perfil): void {
     const fila = crear("div", { class: "idioma" });
     const cab = crear("div", { class: "idioma-cab" });
     cab.append(crear("h3", { text: t(idioma.nombre) }));
-    cab.append(crear("span", { class: "idioma-badge", text: t(idioma.badge) }));
     fila.append(cab);
     fila.append(crear("p", { class: "idioma-nivel", text: t(idioma.nivel) }));
     fila.append(crear("p", { class: "idioma-evidencia", text: t(idioma.evidencia) }));
@@ -377,15 +333,10 @@ function pintarVoluntariado(raiz: ParentNode, d: Perfil): void {
   if (!caja) return;
   vaciar(caja);
   for (const v of d.voluntariado) {
-    const card = crear("article", {
-      class: "voluntariado-card",
-      attrs: { style: `--logo-color: ${v.color}` },
-    });
-    const logo = crear("span", { class: "logo-empresa", text: v.logo });
+    const card = crear("article", { class: "voluntariado-card" });
     const cuerpo = crear("div", { class: "voluntariado-cuerpo" });
     const cab = crear("div", { class: "rol-cab" });
     cab.append(crear("h3", { text: t(v.puesto) }));
-    cab.append(crear("span", { class: "insignia", text: t(v.duracion) }));
     cuerpo.append(cab);
     const org = v.entidadUrl
       ? crear("a", {
@@ -395,12 +346,12 @@ function pintarVoluntariado(raiz: ParentNode, d: Perfil): void {
         })
       : crear("span", { class: "rol-empresa", text: v.entidad });
     cuerpo.append(org);
-    cuerpo.append(crear("p", { class: "rol-meta", text: `${t(v.fechas)} · ${t(v.ubicacion)}` }));
+    cuerpo.append(crear("p", { class: "rol-meta", text: `${t(v.fechas)} (${t(v.duracion)}). ${t(v.ubicacion)}.` }));
     cuerpo.append(crear("p", { class: "rol-resumen", text: t(v.descripcion) }));
     const logros = crear("ul", { class: "lista-logros" });
     for (const logro of tl(v.logros)) logros.append(crear("li", { text: logro }));
     cuerpo.append(logros);
-    card.append(logo, cuerpo);
+    card.append(cuerpo);
     caja.append(card);
   }
 }
@@ -416,20 +367,14 @@ function pintarRecomendaciones(raiz: ParentNode, d: Perfil): void {
       attrs: { style: `--logo-color: ${r.color}` },
     });
     const cab = crear("div", { class: "recomendacion-cab" });
-    const icono = crear("span", { class: "recomendacion-icono" });
-    icono.append(iconoSvg("quote", 22));
-    cab.append(icono, crear("blockquote", { text: t(r.extracto) }));
+    cab.append(crear("blockquote", { text: t(r.extracto) }));
 
     const autor = crear("div", { class: "recomendacion-autor" });
-    autor.append(crear("span", { class: "logo-empresa", text: r.logo }));
     const datosAutor = crear("div", { class: "recomendacion-datos" });
     datosAutor.append(crear("p", { class: "recomendacion-nombre", text: r.autor }));
-    datosAutor.append(crear("p", { class: "recomendacion-rol", text: `${t(r.puesto)} · ${r.empresa}` }));
-    datosAutor.append(crear("p", { class: "recomendacion-relacion", text: `${t(r.relacion)} · ${t(r.fechas)}` }));
+    datosAutor.append(crear("p", { class: "recomendacion-rol", text: `${t(r.puesto)}, ${r.empresa}.` }));
+    datosAutor.append(crear("p", { class: "recomendacion-relacion", text: `${t(r.relacion)}. ${t(r.fechas)}.` }));
     autor.append(datosAutor);
-
-    const puntos = crear("div", { class: "chips" });
-    for (const punto of tl(r.puntos)) puntos.append(chip(punto));
 
     const acciones = crear("div", { class: "recomendacion-acciones" });
     const ver = crear("button", {
@@ -444,7 +389,7 @@ function pintarRecomendaciones(raiz: ParentNode, d: Perfil): void {
     ver.append(iconoSvg("file-text", 14), crear("span", { text: i18n.t("recomendaciones.verCarta") }));
     acciones.append(ver);
 
-    card.append(cab, autor, puntos, acciones);
+    card.append(cab, autor, acciones);
     caja.append(card);
   }
 }
@@ -573,19 +518,16 @@ function pintarTodo(raiz: ParentNode): void {
 
   document.title = `${d.perfil.nombre} — ${i18n.t("comun.cv")}`;
   setCampo(raiz, "nombre", d.perfil.nombre);
-  setCampo(raiz, "eyebrow", t(d.perfil.eyebrow));
-  setCampo(raiz, "pronombres", t(d.perfil.pronombres));
-  setCampo(raiz, "titular", t(d.perfil.titular));
+  setCampo(raiz, "titular", t(d.perfil.titular).replace(/,\s+/g, ". "));
   setCampo(raiz, "resumenCorto", t(d.perfil.resumenCorto));
-  setCampo(raiz, "ubicacion", t(d.perfil.ubicacion));
-  setCampo(raiz, "ubicacionCorta", t(d.perfil.ubicacionCorta));
-  setCampo(raiz, "estado", t(d.perfil.estado));
-  setCampo(raiz, "modalidad", t(d.perfil.modalidad));
-  setCampo(raiz, "disponibilidad", t(d.perfil.disponibilidad));
-  setCampo(raiz, "idiomasResumen", t(d.perfil.idiomasResumen));
   setCampo(raiz, "contactoNota", t(d.perfil.contactoNota));
-  setCampo(raiz, "verificadoNota", t(d.perfil.verificadoNota));
   setCampo(raiz, "email", d.perfil.contacto.email);
+  const estadoLinea = [t(d.perfil.estado), t(d.perfil.modalidad), t(d.perfil.disponibilidad)]
+    .filter(Boolean)
+    .join(". ");
+  setCampo(raiz, "estadoLinea", estadoLinea ? `${estadoLinea}.` : "");
+  const datosHeroe = [t(d.perfil.ubicacion), t(d.perfil.idiomasResumen)].filter(Boolean).join(". ");
+  setCampo(raiz, "datosHeroe", datosHeroe ? `${datosHeroe}.` : "");
   const actualizado = fechaLarga(d.actualizado);
   setCampo(raiz, "actualizado", actualizado);
   for (const time of raiz.querySelectorAll<HTMLTimeElement>("time[data-campo='actualizado']")) {
@@ -594,7 +536,6 @@ function pintarTodo(raiz: ParentNode): void {
   for (const a of raiz.querySelectorAll<HTMLAnchorElement>("a[data-campo='email']")) {
     a.href = `mailto:${d.perfil.contacto.email}`;
   }
-  setUrl(raiz, "linkedinPerfil", d.perfil.linkedinPerfil);
   setUrl(raiz, "linkedin", d.perfil.contacto.linkedin);
   setUrl(raiz, "github", d.perfil.contacto.github);
   setUrl(raiz, "web", d.perfil.contacto.web);
@@ -602,22 +543,6 @@ function pintarTodo(raiz: ParentNode): void {
   if (prosa) {
     vaciar(prosa);
     for (const parrafo of tl(d.sobreMi)) prosa.append(crear("p", { text: parrafo }));
-  }
-
-  const resumen20 = raiz.querySelector<HTMLElement>("[data-lista='resumen20']");
-  if (resumen20) {
-    vaciar(resumen20);
-    for (const linea of tl(d.resumen20)) {
-      const li = crear("li");
-      li.append(iconoSvg("check", 14), crear("span", { text: linea }));
-      resumen20.append(li);
-    }
-  }
-
-  const areas = raiz.querySelector<HTMLElement>("[data-lista='areas']");
-  if (areas) {
-    vaciar(areas);
-    for (const a of d.areas) areas.append(chip(t(a.nombre), t(a.descripcion)));
   }
 
   pintarRedes(raiz, d);
@@ -672,18 +597,6 @@ async function copiarEmail(raiz: ParentNode): Promise<void> {
   } catch {
     mostrarToast(raiz, i18n.t("comun.errorCopia"));
   }
-}
-
-/** Abre/cierra el diálogo de contacto. / Opens/closes the contact dialog. */
-function abrirDialogo(raiz: ParentNode): void {
-  const dialogo = raiz.querySelector<HTMLDialogElement>("[data-dialogo-contacto]");
-  if (!dialogo || dialogo.open) return;
-  dialogo.showModal();
-  dialogo.querySelector<HTMLElement>("[data-accion='cerrar-dialogo']")?.focus();
-}
-
-function cerrarDialogo(raiz: ParentNode): void {
-  raiz.querySelector<HTMLDialogElement>("[data-dialogo-contacto]")?.close();
 }
 
 /** Activa el índice lateral y el enlace activo. / Activates the side index and active link. */
@@ -792,31 +705,7 @@ function configurarRevelado(raiz: ParentNode): () => void {
 
 /** Cablea todas las interacciones. / Wires all interactions. */
 function configurarInteracciones(raiz: Element): () => void {
-  const sello = raiz.querySelector<HTMLButtonElement>("[data-accion='sello']");
-  const pop = raiz.querySelector<HTMLElement>("#sello-info");
-  const dialogo = raiz.querySelector<HTMLDialogElement>("[data-dialogo-contacto]");
   const dialogoPdf = raiz.querySelector<HTMLDialogElement>("[data-dialogo-pdf]");
-
-  const alternarSello = (): void => {
-    if (!pop) return;
-    pop.hidden = !pop.hidden;
-    sello?.setAttribute("aria-expanded", String(!pop.hidden));
-  };
-  const cerrarFuera = (e: MouseEvent): void => {
-    if (!pop || pop.hidden) return;
-    const objetivo = e.target as Element | null;
-    if (objetivo?.closest(".sello") || objetivo?.closest("#sello-info")) return;
-    pop.hidden = true;
-    sello?.setAttribute("aria-expanded", "false");
-  };
-  const onKey = (e: KeyboardEvent): void => {
-    if (e.key === "Escape" && pop && !pop.hidden) {
-      pop.hidden = true;
-      sello?.setAttribute("aria-expanded", "false");
-    }
-  };
-  document.addEventListener("click", cerrarFuera);
-  document.addEventListener("keydown", onKey);
 
   const onClick = (e: MouseEvent): void => {
     const objetivo = e.target as Element | null;
@@ -848,12 +737,14 @@ function configurarInteracciones(raiz: Element): () => void {
     const accionEl = objetivo.closest<HTMLElement>("[data-accion]");
     const accion = accionEl?.dataset["accion"] ?? "";
     if (!accion) return;
-    if (accion === "contacto") abrirDialogo(raiz);
-    else if (accion === "cerrar-dialogo") cerrarDialogo(raiz);
-    else if (accion === "cerrar-pdf") cerrarPdf(raiz);
+    if (accion === "ir-contacto") {
+      document.getElementById("contacto")?.scrollIntoView({
+        behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
+        block: "start",
+      });
+    } else if (accion === "cerrar-pdf") cerrarPdf(raiz);
     else if (accion === "copiar-email") void copiarEmail(raiz);
     else if (accion === "ver-carta") abrirCarta(raiz, accionEl?.dataset["cartaId"] ?? "");
-    else if (accion === "sello") alternarSello();
     else if (accion === "quitar-traza") {
       traza = null;
       aplicarTraza(raiz);
@@ -862,10 +753,8 @@ function configurarInteracciones(raiz: Element): () => void {
   raiz.addEventListener("click", onClick as EventListener);
 
   const onDialogo = (e: MouseEvent): void => {
-    if (e.target === dialogo) dialogo?.close();
     if (e.target === dialogoPdf) cerrarPdf(raiz);
   };
-  dialogo?.addEventListener("click", onDialogo);
   dialogoPdf?.addEventListener("click", onDialogo);
 
   const buscar = raiz.querySelector<HTMLInputElement>("#buscar-aptitud");
@@ -876,10 +765,7 @@ function configurarInteracciones(raiz: Element): () => void {
   buscar?.addEventListener("input", onBuscar);
 
   return () => {
-    document.removeEventListener("click", cerrarFuera);
-    document.removeEventListener("keydown", onKey);
     raiz.removeEventListener("click", onClick as EventListener);
-    dialogo?.removeEventListener("click", onDialogo);
     dialogoPdf?.removeEventListener("click", onDialogo);
     buscar?.removeEventListener("input", onBuscar);
   };
