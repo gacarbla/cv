@@ -3,6 +3,7 @@
  * Spanish strings. Same shape as en.ts and gl.ts.
  */
 export const es = {
+  "nav.indice": "Índice del perfil",
   "nav.resumen": "Resumen",
   "nav.experiencia": "Experiencia",
   "nav.recomendaciones": "Recomendaciones",

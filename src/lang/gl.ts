@@ -2,6 +2,7 @@
  * Textos en galego. Mesma forma que es.ts e en.ts.
  */
 export const gl = {
+  "nav.indice": "Índice do perfil",
   "nav.resumen": "Resumo",
   "nav.experiencia": "Experiencia",
   "nav.recomendaciones": "Recomendacións",

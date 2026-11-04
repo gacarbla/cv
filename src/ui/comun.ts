@@ -132,6 +132,8 @@ export function montarComun(raiz: ParentNode): void {
       const bandera = menu.querySelector<HTMLElement>("[data-idioma-bandera]");
       const codigo = menu.querySelector<HTMLElement>("[data-idioma-codigo]");
       if (!boton || !lista || !bandera || !codigo) continue;
+      if (!lista.id) lista.id = "idioma-lista";
+      boton.setAttribute("aria-controls", lista.id);
       if (!lista.dataset["poblada"]) {
         for (const lang of i18n.languages) {
           const opcion = document.createElement("button");

@@ -50,15 +50,20 @@ function nombreAptitud(id: string): string {
 function nombreEvidencia(ids: string[]): string {
   const d = datos;
   if (!d) return "";
+  const vistos = new Set<string>();
   return ids
     .map((id) => {
       const exp = d.experiencia.find((e) => e.id === id);
       if (exp) return exp.empresa;
       const pro = d.proyectos.find((p) => p.id === id);
-      if (pro) return `${i18n.t("aptitudes.fuenteProyecto")}, ${pro.nombre}`;
+      if (pro) return pro.nombre;
       return "";
     })
-    .filter(Boolean)
+    .filter((valor) => {
+      if (!valor || vistos.has(valor)) return false;
+      vistos.add(valor);
+      return true;
+    })
     .join("; ");
 }
 
@@ -123,8 +128,13 @@ function pintarExperiencia(raiz: ParentNode, d: Perfil): void {
         })
       : crear("span", { class: "rol-empresa", text: exp.empresa });
 
-    const meta = crear("p", { class: "rol-meta", text: `${t(exp.tipo)}. ${t(exp.fechas)} (${t(exp.duracion)}).` });
-    const ubicacion = crear("p", { class: "rol-ubicacion", text: `${t(exp.ubicacion)}. ${t(exp.modalidad)}.` });
+    const meta = crear("p", { class: "rol-meta" });
+    meta.append(
+      crear("span", { text: t(exp.tipo) }),
+      crear("span", { text: `${t(exp.fechas)} (${t(exp.duracion)})` }),
+    );
+    const ubicacion = crear("p", { class: "rol-ubicacion" });
+    ubicacion.append(crear("span", { text: t(exp.ubicacion) }), crear("span", { text: t(exp.modalidad) }));
     const resumen = crear("p", { class: "rol-resumen", text: t(exp.resumen) });
 
     const abierto = abiertos.has(exp.id);
@@ -241,7 +251,13 @@ function pintarProyectos(raiz: ParentNode, d: Perfil): void {
     cuerpo.append(crear("h3", { text: p.nombre }));
     cuerpo.append(crear("p", { class: "proyecto-desc", text: t(p.descripcion) }));
     cuerpo.append(crear("p", { class: "proyecto-stack", text: p.stack.join(", ") }));
-    cuerpo.append(crear("p", { class: "proyecto-meta", text: `${p.anio}. ${t(p.estado)}.` }));
+    const estadoProyecto = t(p.estado);
+    cuerpo.append(
+      crear("p", {
+        class: "proyecto-meta",
+        text: `${p.anio}, ${estadoProyecto.charAt(0).toLocaleLowerCase()}${estadoProyecto.slice(1)}.`,
+      }),
+    );
     const acciones = crear("div", { class: "proyecto-acciones" });
     if (p.repo) acciones.append(enlace(i18n.t("proyectos.verRepo"), p.repo, "enlace-flecha"));
     if (p.demo) acciones.append(enlace(i18n.t("proyectos.verWeb"), p.demo, "enlace-flecha"));
@@ -261,7 +277,7 @@ function pintarFormacion(raiz: ParentNode, d: Perfil): void {
     const cuerpo = crear("div", { class: "formacion-cuerpo" });
     cuerpo.append(crear("h3", { text: t(f.titulo) }));
     cuerpo.append(crear("p", { class: "formacion-centro", text: f.centro }));
-    cuerpo.append(crear("p", { class: "formacion-meta", text: `${t(f.fechas)}. ${t(f.ubicacion)}.` }));
+    cuerpo.append(crear("p", { class: "formacion-meta", text: `${t(f.fechas)}, ${t(f.ubicacion)}.` }));
     cuerpo.append(crear("p", { class: "formacion-actividades", text: `${i18n.t("formacion.actividades")}: ${t(f.actividades)}` }));
     cuerpo.append(crear("p", { class: "formacion-diploma", text: `${i18n.t("formacion.diploma")}: ${t(f.diploma)}` }));
     card.append(cuerpo);
@@ -346,7 +362,7 @@ function pintarVoluntariado(raiz: ParentNode, d: Perfil): void {
         })
       : crear("span", { class: "rol-empresa", text: v.entidad });
     cuerpo.append(org);
-    cuerpo.append(crear("p", { class: "rol-meta", text: `${t(v.fechas)} (${t(v.duracion)}). ${t(v.ubicacion)}.` }));
+    cuerpo.append(crear("p", { class: "rol-meta", text: `${t(v.fechas)} (${t(v.duracion)}), ${t(v.ubicacion)}.` }));
     cuerpo.append(crear("p", { class: "rol-resumen", text: t(v.descripcion) }));
     const logros = crear("ul", { class: "lista-logros" });
     for (const logro of tl(v.logros)) logros.append(crear("li", { text: logro }));
@@ -373,7 +389,7 @@ function pintarRecomendaciones(raiz: ParentNode, d: Perfil): void {
     const datosAutor = crear("div", { class: "recomendacion-datos" });
     datosAutor.append(crear("p", { class: "recomendacion-nombre", text: r.autor }));
     datosAutor.append(crear("p", { class: "recomendacion-rol", text: `${t(r.puesto)}, ${r.empresa}.` }));
-    datosAutor.append(crear("p", { class: "recomendacion-relacion", text: `${t(r.relacion)}. ${t(r.fechas)}.` }));
+    datosAutor.append(crear("p", { class: "recomendacion-relacion", text: `${t(r.relacion)}, ${t(r.fechas)}.` }));
     autor.append(datosAutor);
 
     const acciones = crear("div", { class: "recomendacion-acciones" });

@@ -1715,6 +1715,19 @@ a.rol-empresa:hover {
   margin-bottom: 20px;
 }
 
+.contador {
+  font-family: inherit;
+  font-size: 0.78rem;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.buscador input:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  box-shadow: none;
+}
+
 .seccion-cab h2 {
   font-size: clamp(1.7rem, 3vw, 2.3rem);
   letter-spacing: -0.025em;
@@ -1815,6 +1828,11 @@ a.rol-empresa:hover {
   text-transform: none;
   color: var(--muted);
   margin: 6px 0 0;
+}
+
+.rol-meta span,
+.rol-ubicacion span {
+  display: block;
 }
 
 .rol-resumen {
@@ -1948,7 +1966,12 @@ a.rol-empresa:hover {
   font-size: 0.84rem;
 }
 
+.formacion-grid {
+  align-items: start;
+}
+
 .formacion-card {
+  height: auto;
   border: 0;
   border-top: 1px solid var(--line);
   border-radius: 0;
@@ -2163,6 +2186,8 @@ a.rol-empresa:hover {
     padding-right: 24px;
     padding-bottom: 2px;
     scroll-padding-inline: 24px;
+    -webkit-mask-image: linear-gradient(to right, transparent 0, #000 14px, #000 calc(100% - 18px), transparent 100%);
+    mask-image: linear-gradient(to right, transparent 0, #000 14px, #000 calc(100% - 18px), transparent 100%);
   }
 
   .indice::-webkit-scrollbar {

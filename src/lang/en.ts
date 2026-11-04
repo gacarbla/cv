@@ -2,6 +2,7 @@
  * English strings. Same shape as es.ts and gl.ts.
  */
 export const en = {
+  "nav.indice": "Profile index",
   "nav.resumen": "Summary",
   "nav.experiencia": "Experience",
   "nav.recomendaciones": "Recommendations",
