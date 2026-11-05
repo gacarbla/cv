@@ -1893,6 +1893,7 @@ a.rol-empresa:hover {
   border-top: 1px solid var(--line);
   border-radius: 0;
   background: transparent;
+  cursor: default;
   padding: 16px 0;
   gap: 6px;
 }
@@ -2581,7 +2582,7 @@ a.rol-empresa:hover {
   }
 
   .aptitud {
-    padding: 16px;
+    padding: 16px 0;
   }
 
   .aptitud-fuente {
@@ -2900,6 +2901,10 @@ a.rol-empresa:hover {
 
   .icono {
     width: 44px;
+    height: 44px;
+  }
+
+  .idioma-boton {
     height: 44px;
   }
 

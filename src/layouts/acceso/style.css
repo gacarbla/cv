@@ -312,7 +312,7 @@ page {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  height: 44px;
+  height: 40px;
   padding: 0 10px;
   border: 1px solid var(--line);
   border-radius: 999px;
@@ -513,6 +513,10 @@ page {
 
   .idioma-menu {
     display: inline-block;
+  }
+
+  .idioma-boton {
+    height: 44px;
   }
 }
 

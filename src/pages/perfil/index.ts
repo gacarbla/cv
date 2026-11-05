@@ -8,9 +8,9 @@ import { fechaLarga } from "../../ui/formato.js";
 
 /**
  * Perfil interactivo: pinta datos descifrados con nodos DOM seguros,
- * filtra experiencia y competencias, traza evidencias y ofrece PDF.
+ * filtra experiencia y competencias y ofrece PDF.
  * Interactive profile: paints decrypted data with safe DOM nodes,
- * filters experience and skills, traces evidence and offers PDF.
+ * filters experience and skills, and offers the PDF.
  */
 
 let limpiarPagina: (() => void) | null = null;
@@ -19,7 +19,6 @@ let datos: Perfil | null = null;
 let filtroArea = "todas";
 let filtroAptitud = "todas";
 let busqueda = "";
-let traza: string | null = null;
 const abiertos = new Set<string>();
 let abiertosInicializado = false;
 let temporizadorToast = 0;
@@ -38,12 +37,6 @@ function setUrl(raiz: ParentNode, clave: string, url: string): void {
   for (const el of raiz.querySelectorAll<HTMLAnchorElement>(`[data-url="${clave}"]`)) {
     if (url) el.href = url;
   }
-}
-
-/** Nombre de una competencia por id. / Skill name by id. */
-function nombreAptitud(id: string): string {
-  const a = datos?.aptitudes.find((x) => x.id === id);
-  return a ? t(a.nombre) : id;
 }
 
 /** Evidencias legibles de una competencia. / Readable evidence for a skill. */
@@ -183,24 +176,21 @@ function pintarAptitudes(raiz: ParentNode, d: Perfil): void {
   if (caja) {
     vaciar(caja);
     for (const a of d.aptitudes) {
-      const boton = crear("button", {
+      const tarjeta = crear("article", {
         class: "aptitud",
         attrs: {
-          type: "button",
           "data-aptitud": a.id,
           "data-categoria": a.categoria,
           "data-fuente": a.fuente,
-          "aria-pressed": String(traza === a.id),
-          title: i18n.t("aptitudes.trazar"),
         },
       });
       const top = crear("span", { class: "aptitud-top" });
       top.append(crear("span", { class: "aptitud-nombre", text: t(a.nombre) }));
-      boton.append(top);
-      boton.append(crear("span", { class: "aptitud-desc", text: t(a.descripcion) }));
+      tarjeta.append(top);
+      tarjeta.append(crear("span", { class: "aptitud-desc", text: t(a.descripcion) }));
       const ev = nombreEvidencia(a.evidencia);
-      if (ev) boton.append(crear("span", { class: "aptitud-evidencia", text: ev }));
-      caja.append(boton);
+      if (ev) tarjeta.append(crear("span", { class: "aptitud-evidencia", text: ev }));
+      caja.append(tarjeta);
     }
   }
 
@@ -496,37 +486,6 @@ function aplicarFiltroAptitudes(raiz: ParentNode): void {
   if (vacio) vacio.hidden = visibles > 0;
 }
 
-/** Aplica la traza de una competencia sobre la experiencia. / Applies a skill trace over experience. */
-function aplicarTraza(raiz: ParentNode): void {
-  const linea = raiz.querySelector<HTMLElement>(".linea");
-  const aviso = raiz.querySelector<HTMLElement>("[data-traza]");
-  if (linea) linea.toggleAttribute("data-trazando", traza !== null);
-  for (const li of raiz.querySelectorAll<HTMLElement>(".linea > li")) {
-    const ok = !!traza && (li.dataset["aptitudes"] ?? "").split(" ").includes(traza);
-    li.classList.toggle("traza", ok);
-  }
-  for (const b of raiz.querySelectorAll<HTMLElement>("[data-aptitud]")) {
-    const on = b.dataset["aptitud"] === traza;
-    b.setAttribute("aria-pressed", String(on));
-    b.classList.toggle("trazando", on);
-  }
-  if (!aviso) return;
-  vaciar(aviso);
-  if (!traza) {
-    aviso.hidden = true;
-    return;
-  }
-  aviso.hidden = false;
-  aviso.append(crear("span", { text: i18n.t("experiencia.trazando", { nombre: nombreAptitud(traza) }) }));
-  aviso.append(
-    crear("button", {
-      class: "enlace",
-      text: i18n.t("experiencia.quitarTraza"),
-      attrs: { type: "button", "data-accion": "quitar-traza" },
-    }),
-  );
-}
-
 /** Pinta todo el contenido dinámico. / Paints all dynamic content. */
 function pintarTodo(raiz: ParentNode): void {
   const d = datos;
@@ -542,8 +501,6 @@ function pintarTodo(raiz: ParentNode): void {
     .filter(Boolean)
     .join(". ");
   setCampo(raiz, "estadoLinea", estadoLinea ? `${estadoLinea}.` : "");
-  const datosHeroe = [t(d.perfil.ubicacion), t(d.perfil.idiomasResumen)].filter(Boolean).join(". ");
-  setCampo(raiz, "datosHeroe", datosHeroe ? `${datosHeroe}.` : "");
   const actualizado = fechaLarga(d.actualizado);
   setCampo(raiz, "actualizado", actualizado);
   for (const time of raiz.querySelectorAll<HTMLTimeElement>("time[data-campo='actualizado']")) {
@@ -573,7 +530,6 @@ function pintarTodo(raiz: ParentNode): void {
 
   aplicarFiltroExperiencia(raiz);
   aplicarFiltroAptitudes(raiz);
-  aplicarTraza(raiz);
 }
 
 /** Muestra un aviso breve. / Shows a brief toast. */
@@ -719,6 +675,51 @@ function configurarRevelado(raiz: ParentNode): () => void {
   return () => obs.disconnect();
 }
 
+/** Abre o cierra un bloque con animación de altura. / Opens or closes a block with a height animation. */
+function alternarDetalle(det: HTMLDetailsElement): void {
+  const contenido = det.querySelector<HTMLElement>(".detalle-in, .cert-detalle");
+  if (!contenido || det.hasAttribute("data-animando")) return;
+  det.setAttribute("data-animando", "");
+  const abrir = !det.open;
+  if (abrir) det.open = true;
+  const altura = contenido.scrollHeight;
+
+  const limpiar = (): void => {
+    contenido.style.removeProperty("height");
+    contenido.style.removeProperty("overflow");
+    contenido.style.removeProperty("opacity");
+    contenido.style.removeProperty("box-sizing");
+    contenido.style.removeProperty("transition");
+    det.removeAttribute("data-animando");
+  };
+
+  if (altura === 0) {
+    if (!abrir) det.open = false;
+    limpiar();
+    return;
+  }
+
+  contenido.style.boxSizing = "border-box";
+  contenido.style.overflow = "hidden";
+  contenido.style.height = abrir ? "0px" : `${altura}px`;
+  contenido.style.opacity = abrir ? "0" : "1";
+  void contenido.offsetHeight;
+
+  const fin = (ev: TransitionEvent): void => {
+    if (ev.propertyName !== "height") return;
+    contenido.removeEventListener("transitionend", fin);
+    if (!abrir) det.open = false;
+    limpiar();
+  };
+  contenido.addEventListener("transitionend", fin);
+  requestAnimationFrame(() => {
+    contenido.style.transition =
+      "height 0.24s var(--ease-entrada), opacity 0.18s var(--ease-salida)";
+    contenido.style.height = abrir ? `${altura}px` : "0px";
+    contenido.style.opacity = abrir ? "1" : "0";
+  });
+}
+
 /** Cablea todas las interacciones. / Wires all interactions. */
 function configurarInteracciones(raiz: Element): () => void {
   const dialogoPdf = raiz.querySelector<HTMLDialogElement>("[data-dialogo-pdf]");
@@ -727,12 +728,20 @@ function configurarInteracciones(raiz: Element): () => void {
     const objetivo = e.target as Element | null;
     if (!objetivo) return;
 
-    const aptitud = objetivo.closest<HTMLElement>("[data-aptitud]");
-    if (aptitud && raiz.contains(aptitud)) {
-      const id = aptitud.dataset["aptitud"] ?? "";
-      traza = traza === id ? null : id;
-      aplicarTraza(raiz);
-      if (traza) mostrarToast(raiz, i18n.t("experiencia.trazando", { nombre: nombreAptitud(traza) }));
+    const resumen = objetivo.closest("summary");
+    const detalle = resumen?.parentElement;
+    if (
+      resumen &&
+      detalle instanceof HTMLDetailsElement &&
+      (detalle.classList.contains("rol-detalle") || detalle.classList.contains("certificado"))
+    ) {
+      if (
+        !window.matchMedia("(prefers-reduced-motion: reduce)").matches &&
+        detalle.querySelector(".detalle-in, .cert-detalle")
+      ) {
+        e.preventDefault();
+        alternarDetalle(detalle);
+      }
       return;
     }
 
@@ -761,10 +770,6 @@ function configurarInteracciones(raiz: Element): () => void {
     } else if (accion === "cerrar-pdf") cerrarPdf(raiz);
     else if (accion === "copiar-email") void copiarEmail(raiz);
     else if (accion === "ver-carta") abrirCarta(raiz, accionEl?.dataset["cartaId"] ?? "");
-    else if (accion === "quitar-traza") {
-      traza = null;
-      aplicarTraza(raiz);
-    }
   };
   raiz.addEventListener("click", onClick as EventListener);
 
