@@ -1845,18 +1845,53 @@ a.rol-empresa:hover {
   font-size: 0.84rem;
 }
 
-.rol-detalle summary::before {
-  content: "";
-  width: 6px;
-  height: 6px;
-  border-right: 1.5px solid currentColor;
-  border-bottom: 1.5px solid currentColor;
-  transform: rotate(45deg);
-  margin-right: 5px;
+.rol-detalle summary::before,
+.rol-detalle[open] summary::before,
+.certificado summary::after,
+.certificado[open] summary::after {
+  content: none;
+  display: none;
 }
 
-.rol-detalle[open] summary::before {
-  transform: rotate(225deg);
+.desplegable-icono {
+  position: relative;
+  display: inline-block;
+  flex: none;
+  width: 10px;
+  height: 10px;
+  color: var(--accent-texto);
+}
+
+.desplegable-icono::before,
+.desplegable-icono::after {
+  content: "";
+  position: absolute;
+  background: currentColor;
+  transition: transform 0.3s ease-in-out;
+}
+
+.desplegable-icono::before {
+  top: 50%;
+  left: 0;
+  width: 10px;
+  height: 1.5px;
+  transform: translateY(-50%);
+}
+
+.desplegable-icono::after {
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 1.5px;
+  transform: translateX(-50%);
+}
+
+[data-abierto="true"] .desplegable-icono::after {
+  transform: translateX(-50%) rotate(90deg);
+}
+
+.certificado .desplegable-icono {
+  justify-self: end;
 }
 
 .rol-herramientas {
@@ -2016,19 +2051,6 @@ a.rol-empresa:hover {
 
 .cert-entidad {
   font-size: 0.8rem;
-}
-
-.certificado summary::after {
-  content: "";
-  width: 7px;
-  height: 7px;
-  border-right: 1.5px solid var(--accent-texto);
-  border-bottom: 1.5px solid var(--accent-texto);
-  transform: rotate(45deg);
-}
-
-.certificado[open] summary::after {
-  transform: rotate(225deg);
 }
 
 .idiomas-lista {
@@ -2285,10 +2307,11 @@ a.rol-empresa:hover {
     text-align: left;
   }
 
-  .certificado summary::after {
+  .certificado .desplegable-icono {
     grid-column: 2;
     grid-row: 1 / span 3;
     align-self: center;
+    justify-self: end;
   }
 
   .cert-detalle {
@@ -2935,7 +2958,9 @@ a.rol-empresa:hover {
   .sello,
   .red,
   .riel,
-  .indice {
+  .indice,
+  .desplegable-icono::before,
+  .desplegable-icono::after {
     transition: none;
   }
 

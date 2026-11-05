@@ -131,8 +131,18 @@ function pintarExperiencia(raiz: ParentNode, d: Perfil): void {
     const resumen = crear("p", { class: "rol-resumen", text: t(exp.resumen) });
 
     const abierto = abiertos.has(exp.id);
-    const detalle = crear("details", { class: "rol-detalle", attrs: { open: abierto } });
-    const summary = crear("summary", { text: abierto ? i18n.t("experiencia.verMenos") : i18n.t("experiencia.verDetalle") });
+    const detalle = crear("details", {
+      class: "rol-detalle",
+      attrs: { open: abierto, "data-abierto": String(abierto) },
+    });
+    const summary = crear("summary");
+    const summaryTexto = crear("span", {
+      text: abierto ? i18n.t("experiencia.verMenos") : i18n.t("experiencia.verDetalle"),
+    });
+    summary.append(
+      crear("span", { class: "desplegable-icono", attrs: { "aria-hidden": "true" } }),
+      summaryTexto,
+    );
     const dentro = crear("div", { class: "detalle-in" });
     const logros = crear("ul", { class: "lista-logros" });
     for (const logro of tl(exp.logros)) logros.append(crear("li", { text: logro }));
@@ -144,7 +154,10 @@ function pintarExperiencia(raiz: ParentNode, d: Perfil): void {
     detalle.addEventListener("toggle", () => {
       if (detalle.open) abiertos.add(exp.id);
       else abiertos.delete(exp.id);
-      summary.textContent = detalle.open ? i18n.t("experiencia.verMenos") : i18n.t("experiencia.verDetalle");
+      detalle.dataset["abierto"] = String(detalle.open);
+      summaryTexto.textContent = detalle.open
+        ? i18n.t("experiencia.verMenos")
+        : i18n.t("experiencia.verDetalle");
     });
 
     cuerpo.append(cab, empresa, meta, ubicacion, resumen, detalle);
@@ -303,17 +316,21 @@ function pintarCertificaciones(raiz: ParentNode, d: Perfil): void {
 function certificado(c: Certificacion): HTMLDetailsElement {
   const det = crear("details", {
     class: `certificado${c.destacado ? " destacado" : ""}`,
-    attrs: { style: `--logo-color: ${c.color}` },
+    attrs: { style: `--logo-color: ${c.color}`, "data-abierto": "false" },
   });
   const sum = crear("summary");
   sum.append(crear("span", { class: "cert-anio", text: t(c.fechas) }));
   sum.append(crear("span", { class: "cert-nombre", text: c.nombre }));
   sum.append(crear("span", { class: "cert-entidad", text: c.entidad }));
+  sum.append(crear("span", { class: "desplegable-icono", attrs: { "aria-hidden": "true" } }));
   const dentro = crear("div", { class: "cert-detalle" });
   dentro.append(crear("p", { text: `${i18n.t("formacion.credencial")}: ${c.credencial}` }));
   dentro.append(crear("p", { class: "cert-skill", text: t(c.skill) }));
   if (c.entidadUrl) dentro.append(enlace(c.entidad, c.entidadUrl, "enlace-flecha"));
   det.append(sum, dentro);
+  det.addEventListener("toggle", () => {
+    det.dataset["abierto"] = String(det.open);
+  });
   return det;
 }
 
@@ -681,6 +698,7 @@ function alternarDetalle(det: HTMLDetailsElement): void {
   if (!contenido || det.hasAttribute("data-animando")) return;
   det.setAttribute("data-animando", "");
   const abrir = !det.open;
+  det.dataset["abierto"] = String(abrir);
   if (abrir) det.open = true;
   const altura = contenido.scrollHeight;
 
@@ -762,12 +780,7 @@ function configurarInteracciones(raiz: Element): () => void {
     const accionEl = objetivo.closest<HTMLElement>("[data-accion]");
     const accion = accionEl?.dataset["accion"] ?? "";
     if (!accion) return;
-    if (accion === "ir-contacto") {
-      document.getElementById("contacto")?.scrollIntoView({
-        behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
-        block: "start",
-      });
-    } else if (accion === "cerrar-pdf") cerrarPdf(raiz);
+    if (accion === "cerrar-pdf") cerrarPdf(raiz);
     else if (accion === "copiar-email") void copiarEmail(raiz);
     else if (accion === "ver-carta") abrirCarta(raiz, accionEl?.dataset["cartaId"] ?? "");
   };
