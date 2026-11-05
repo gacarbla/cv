@@ -46,6 +46,16 @@ for (const rel of bundle) {
 if (fs.existsSync(path.join(__dirname, "..", "assets")) && !fs.existsSync(path.join(WEB, "assets"))) {
   missing.push("web/assets");
 }
+
+const prohibidos = ["assets/datos/perfil.cifrado.json", "web/assets/datos/perfil.cifrado.json"];
+const presentes = prohibidos.filter((rel) => fs.existsSync(path.join(__dirname, "..", rel)));
+if (presentes.length > 0) {
+  console.error(
+    `Sobre estático prohibido / Static envelope must not be published: ${presentes.join(", ")}`,
+  );
+  process.exit(1);
+}
+
 if (missing.length > 0) {
   console.error(`Paquete web incompleto / Incomplete web bundle: ${missing.join(", ")}`);
   process.exit(1);

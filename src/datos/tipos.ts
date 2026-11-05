@@ -184,5 +184,5 @@ export interface Sobre {
   cipher: { alg: string; iv: string };
   aad: string;
   ct: string;
-  meta?: { createdAt?: string; perfilVersion?: number; actualizado?: string };
+  meta?: { createdAt?: string; perfilVersion?: number; actualizado?: string; bytes?: number };
 }

@@ -10,7 +10,6 @@
     "dev": "npx -y serve@14.2.4 . -l 8082",
     "clave": "node tools/clave.mjs",
     "recomendacion": "node tools/recomendacion.mjs",
-    "cifrar": "node tools/cifrar.mjs",
     "qr": "node tools/qr.mjs",
     "publicar": "node tools/publicar.mjs"
   },

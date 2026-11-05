@@ -1,5 +1,7 @@
 /** Rutas públicas y constantes de la sesión privada. / Public paths and private session constants. */
-export const RUTA_SOBRE = "/assets/datos/perfil.cifrado.json";
+export const API_BASE = "https://api.gacarbla.es";
+export const RUTA_PARAMS = `${API_BASE}/cv/v1/params`;
+export const RUTA_UNLOCK = `${API_BASE}/cv/v1/unlock`;
 export const RUTA_PUBLICO = "/assets/datos/perfil.publico.json";
 export const RUTA_MODO = "/assets/datos/modo.json";
 

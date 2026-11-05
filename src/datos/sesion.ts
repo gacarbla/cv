@@ -4,19 +4,20 @@ import {
   ITERACIONES_MAX,
   ITERACIONES_MIN,
   RUTA_MODO,
+  RUTA_PARAMS,
   RUTA_PUBLICO,
-  RUTA_SOBRE,
+  RUTA_UNLOCK,
   TTL_SESION,
 } from "../ajustes.js";
 import type { Perfil, Sobre } from "./tipos.js";
 
 /**
- * Acceso privado: sobre cifrado AES-GCM, clave derivada con PBKDF2 y
- * sesión de pestaña. El perfil en claro solo existe en memoria tras
- * descifrar; nunca se escribe en el DOM antes de tiempo.
- * Private access: AES-GCM envelope, PBKDF2-derived key and tab session.
- * Plaintext profile only exists in memory after decryption; it never
- * reaches the DOM before that.
+ * Acceso privado: parámetros KDF de la API, authHash derivado en local,
+ * sobre cifrado AES-GCM y sesión de pestaña. La contraseña nunca sale
+ * del navegador; el perfil en claro solo existe en memoria.
+ * Private access: KDF parameters from the API, locally derived authHash,
+ * AES-GCM envelope and tab session. The password never leaves the browser;
+ * plaintext profile only exists in memory.
  */
 
 /** Error de sesión ausente. / Missing-session error. */
@@ -27,7 +28,7 @@ export class SinSesion extends Error {
   }
 }
 
-/** Error de red al traer el sobre. / Network error while fetching the envelope. */
+/** Error de red, timeout o respuesta no utilizable. / Network, timeout or unusable response. */
 class ErrorRed extends Error {
   constructor() {
     super("red");
@@ -35,15 +36,41 @@ class ErrorRed extends Error {
   }
 }
 
+/** Error HTTP tipado de la API. / Typed HTTP error from the API. */
+class ErrorApi extends Error {
+  readonly status: number;
+  readonly code: string;
+  readonly retryAfter: number;
+
+  constructor(status: number, code: string, retryAfter = 0) {
+    super(code || "api");
+    this.name = "ErrorApi";
+    this.status = status;
+    this.code = code;
+    this.retryAfter = retryAfter;
+  }
+}
+
 /** Estado visible del acceso. / Visible access state. */
-export const estadoAcceso: { error: "clave" | "red" | "crypto" | "espera" | null } = {
+export const estadoAcceso: {
+  error: "clave" | "red" | "crypto" | "espera" | "servicio" | null;
+} = {
   error: null,
 };
+
+/** Parámetros KDF normalizados y cacheados en memoria. / Normalised KDF parameters cached in memory. */
+interface ParametrosKdf {
+  v: 1;
+  kdf: { alg: "PBKDF2-SHA-256"; iter: number; salt: string };
+  salt: Uint8Array;
+}
 
 /** Perfil descifrado en memoria. / Decrypted profile in memory. */
 let perfilActual: Perfil | null = null;
 /** Modo leído de modo.json (cacheado). / Mode read from modo.json (cached). */
 let modoCache: "cifrado" | "publico" | null = null;
+/** Parámetros de KDF cacheados durante la vida de la página. / KDF params cached for the page lifetime. */
+let parametrosCache: ParametrosKdf | null = null;
 /** Último toque de sesión (para no escribir en cada scroll). / Last session touch. */
 let ultimoToque = 0;
 
@@ -74,6 +101,14 @@ function deB64url(texto: string): Uint8Array {
   return out;
 }
 
+/** base64 estándar -> Uint8Array. / Standard base64 -> Uint8Array. */
+function deB64(texto: string): Uint8Array {
+  const bin = atob(texto);
+  const out = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) out[i] = bin.charCodeAt(i);
+  return out;
+}
+
 /** Copia a un ArrayBuffer propio para WebCrypto. / Copies to an owned ArrayBuffer for WebCrypto. */
 function aBuffer(bytes: Uint8Array): ArrayBuffer {
   const out = new ArrayBuffer(bytes.byteLength);
@@ -84,6 +119,19 @@ function aBuffer(bytes: Uint8Array): ArrayBuffer {
 /** ¿Hay WebCrypto disponible? / Is WebCrypto available? */
 function hayCrypto(): boolean {
   return typeof crypto !== "undefined" && typeof crypto.subtle !== "undefined";
+}
+
+/** fetch con timeout; cualquier fallo de transporte se trata como red. / fetch with timeout; transport failures become network errors. */
+async function fetchConTimeout(url: string, init: RequestInit, ms: number): Promise<Response> {
+  const controlador = new AbortController();
+  const temporizador = window.setTimeout(() => controlador.abort(), ms);
+  try {
+    return await fetch(url, { ...init, signal: controlador.signal });
+  } catch {
+    throw new ErrorRed();
+  } finally {
+    window.clearTimeout(temporizador);
+  }
 }
 
 /** Sustituye el hash sin crear historial. / Replaces the hash without history. */
@@ -109,20 +157,85 @@ export async function leerModo(): Promise<"cifrado" | "publico"> {
   return modoCache;
 }
 
-/** Trae y valida el sobre cifrado. / Fetches and validates the encrypted envelope. */
-async function leerSobre(): Promise<Sobre> {
-  let r: Response;
+/** Pide y valida los parámetros KDF globales. / Fetches and validates the global KDF parameters. */
+async function leerParams(): Promise<ParametrosKdf> {
+  if (parametrosCache) return parametrosCache;
+  const r = await fetchConTimeout(
+    RUTA_PARAMS,
+    { cache: "no-store", credentials: "omit", mode: "cors" },
+    10000,
+  );
+  if (!r.ok) throw new ErrorRed();
+  let data: unknown;
   try {
-    r = await fetch(RUTA_SOBRE, { cache: "no-store" });
+    data = await r.json();
   } catch {
     throw new ErrorRed();
   }
-  if (!r.ok) throw new ErrorRed();
-  return (await r.json()) as Sobre;
+  const obj = data as { v?: unknown; kdf?: { alg?: unknown; iter?: unknown; salt?: unknown } };
+  const kdf = obj?.kdf;
+  if (
+    !obj ||
+    obj.v !== 1 ||
+    !kdf ||
+    kdf.alg !== "PBKDF2-SHA-256" ||
+    typeof kdf.salt !== "string" ||
+    typeof kdf.iter !== "number" ||
+    !Number.isInteger(kdf.iter) ||
+    kdf.iter < ITERACIONES_MIN ||
+    kdf.iter > ITERACIONES_MAX
+  ) {
+    throw new ErrorRed();
+  }
+  let salt: Uint8Array;
+  try {
+    salt = deB64(kdf.salt);
+  } catch {
+    throw new ErrorRed();
+  }
+  if (salt.length !== 16) throw new ErrorRed();
+  parametrosCache = {
+    v: 1,
+    kdf: { alg: "PBKDF2-SHA-256", iter: kdf.iter, salt: kdf.salt },
+    salt,
+  };
+  return parametrosCache;
 }
 
-/** Valida el sobre y devuelve sus parámetros. / Validates the envelope and returns its parameters. */
-function validarSobre(env: Sobre): { salt: Uint8Array; iv: Uint8Array; aad: string } {
+/** Pide el sobre con el authHash. / Requests the envelope with the authHash. */
+async function pedirSobre(authHash: string): Promise<Sobre> {
+  const r = await fetchConTimeout(
+    RUTA_UNLOCK,
+    {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ authHash }),
+      cache: "no-store",
+      credentials: "omit",
+      mode: "cors",
+    },
+    10000,
+  );
+  if (r.ok) {
+    try {
+      return (await r.json()) as Sobre;
+    } catch {
+      throw new ErrorRed();
+    }
+  }
+  let code = "";
+  try {
+    const data = (await r.json()) as { error?: { code?: string } };
+    code = data?.error?.code ?? "";
+  } catch {
+    /* respuesta sin JSON / non-JSON response */
+  }
+  const retryAfter = Math.max(0, Number(r.headers.get("Retry-After") ?? "0") || 0);
+  throw new ErrorApi(r.status, code, retryAfter);
+}
+
+/** Valida el sobre y lo ata a los parámetros globales. / Validates the envelope and binds it to global params. */
+function validarSobre(env: Sobre, params: ParametrosKdf): { iv: Uint8Array; aad: string } {
   if (!env || env.v !== 1) throw new Error("version");
   if (env.kdf?.alg !== "PBKDF2-SHA-256" || env.cipher?.alg !== "AES-256-GCM") {
     throw new Error("algoritmo");
@@ -134,12 +247,15 @@ function validarSobre(env: Sobre): { salt: Uint8Array; iv: Uint8Array; aad: stri
   ) {
     throw new Error("iteraciones");
   }
-  const salt = deB64url(env.kdf.salt);
+  if (env.kdf.salt !== params.kdf.salt || env.kdf.iter !== params.kdf.iter) {
+    throw new Error("kdf");
+  }
+  const salt = deB64(env.kdf.salt);
   const iv = deB64url(env.cipher.iv);
   if (salt.length !== 16 || iv.length !== 12 || !env.ct) throw new Error("sobre");
   const aad = `cv|${env.v}|${env.kdf.alg}|${env.kdf.iter}|${env.kdf.salt}|${env.cipher.alg}`;
   if (env.aad !== aad) throw new Error("aad");
-  return { salt, iv, aad };
+  return { iv, aad };
 }
 
 /** Deriva la clave y la exporta para la sesión. / Derives the key and exports it for the session. */
@@ -182,17 +298,6 @@ async function descifrarConLlave(
     aBuffer(deB64url(env.ct)),
   );
   return JSON.parse(new TextDecoder().decode(claro)) as Perfil;
-}
-
-/** Descifra el sobre con la clave escrita. / Decrypts the envelope with the typed key. */
-async function descifrarConClave(
-  env: Sobre,
-  clave: string,
-): Promise<{ perfil: Perfil; raw: Uint8Array }> {
-  const { salt, iv, aad } = validarSobre(env);
-  const { llave, raw } = await derivarClave(clave, salt, env.kdf.iter);
-  const perfil = await descifrarConLlave(env, llave, { iv, aad });
-  return { perfil, raw };
 }
 
 /** Importa la clave cruda guardada en la sesión. / Imports the raw key stored in the session. */
@@ -300,6 +405,23 @@ function registrarFallo(): number {
   }
 }
 
+/** Aplica el Retry-After de la API. / Applies the API Retry-After. */
+function bloquearPorApi(segundos: number): void {
+  const espera = Math.max(1, Math.ceil(segundos || 30));
+  let n = 1;
+  try {
+    const raw = localStorage.getItem(CLAVE_INTENTOS);
+    const data = raw ? (JSON.parse(raw) as { n?: number }) : null;
+    n = Math.max(1, (data?.n ?? 0) + 1);
+    localStorage.setItem(
+      CLAVE_INTENTOS,
+      JSON.stringify({ n, hasta: Date.now() + espera * 1000 }),
+    );
+  } catch {
+    /* opcional / optional */
+  }
+}
+
 /** Limpia el freno de intentos. / Clears the attempt throttle. */
 function limpiarIntentos(): void {
   try {
@@ -338,20 +460,37 @@ export async function abrirConClave(clave: string): Promise<boolean> {
     return false;
   }
   try {
-    const env = await leerSobre();
-    const { perfil, raw } = await descifrarConClave(env, clave);
-    perfilActual = perfil;
+    const params = await leerParams();
+    const { llave, raw } = await derivarClave(clave, params.salt, params.kdf.iter);
+    const env = await pedirSobre(aB64url(raw));
+    const { iv, aad } = validarSobre(env, params);
+    perfilActual = await descifrarConLlave(env, llave, { iv, aad });
     guardarSesion(raw);
     limpiarIntentos();
     return true;
   } catch (e) {
-    if (e instanceof ErrorRed) {
+    if (e instanceof ErrorApi) {
+      if (e.status === 429) {
+        bloquearPorApi(e.retryAfter);
+        estadoAcceso.error = "espera";
+      } else if (
+        e.status === 503 &&
+        (e.code === "CV_UNAVAILABLE" || e.code === "CV_NOT_CONFIGURED")
+      ) {
+        estadoAcceso.error = "servicio";
+      } else if (e.status === 400 || e.status === 401) {
+        registrarFallo();
+        estadoAcceso.error = "clave";
+      } else {
+        estadoAcceso.error = "red";
+      }
+    } else if (e instanceof ErrorRed) {
       estadoAcceso.error = "red";
     } else if ((e as { name?: string }).name === "OperationError") {
       registrarFallo();
       estadoAcceso.error = "clave";
     } else {
-      estadoAcceso.error = "clave";
+      estadoAcceso.error = "red";
     }
     return false;
   }
@@ -367,8 +506,9 @@ export async function recuperarSesion(): Promise<boolean> {
   const sesion = leerSesion();
   if (!sesion) return false;
   try {
-    const env = await leerSobre();
-    const { iv, aad } = validarSobre(env);
+    const params = await leerParams();
+    const env = await pedirSobre(aB64url(sesion.raw));
+    const { iv, aad } = validarSobre(env, params);
     const llave = await importarRaw(sesion.raw);
     perfilActual = await descifrarConLlave(env, llave, { iv, aad });
     return true;
