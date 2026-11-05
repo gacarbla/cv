@@ -137,6 +137,7 @@ function pintarExperiencia(raiz: ParentNode, d: Perfil): void {
     });
     const summary = crear("summary");
     const summaryTexto = crear("span", {
+      class: "desplegable-texto",
       text: abierto ? i18n.t("experiencia.verMenos") : i18n.t("experiencia.verDetalle"),
     });
     summary.append(
@@ -145,18 +146,22 @@ function pintarExperiencia(raiz: ParentNode, d: Perfil): void {
     );
     const dentro = crear("div", { class: "detalle-in" });
     const contenido = crear("div", { class: "detalle-contenido" });
+    const relleno = crear("div", { class: "detalle-padding" });
     const logros = crear("ul", { class: "lista-logros" });
     for (const logro of tl(exp.logros)) logros.append(crear("li", { text: logro }));
     const herramientas = crear("p", { class: "rol-herramientas" });
     herramientas.append(crear("strong", { text: `${i18n.t("experiencia.herramientas")}: ` }));
     herramientas.append(document.createTextNode(exp.herramientas.join(", ")));
-    contenido.append(logros, herramientas);
+    relleno.append(logros, herramientas);
+    contenido.append(relleno);
     dentro.append(contenido);
     detalle.append(summary, dentro);
     detalle.addEventListener("toggle", () => {
       if (detalle.open) abiertos.add(exp.id);
       else abiertos.delete(exp.id);
-      detalle.dataset["abierto"] = String(detalle.open);
+      if (!detalle.hasAttribute("data-animando")) {
+        detalle.dataset["abierto"] = String(detalle.open);
+      }
       summaryTexto.textContent = detalle.open
         ? i18n.t("experiencia.verMenos")
         : i18n.t("experiencia.verDetalle");
@@ -327,13 +332,17 @@ function certificado(c: Certificacion): HTMLDetailsElement {
   sum.append(crear("span", { class: "desplegable-icono", attrs: { "aria-hidden": "true" } }));
   const dentro = crear("div", { class: "cert-detalle" });
   const contenido = crear("div", { class: "cert-detalle-contenido" });
-  contenido.append(crear("p", { text: `${i18n.t("formacion.credencial")}: ${c.credencial}` }));
-  contenido.append(crear("p", { class: "cert-skill", text: t(c.skill) }));
-  if (c.entidadUrl) contenido.append(enlace(c.entidad, c.entidadUrl, "enlace-flecha"));
+  const relleno = crear("div", { class: "cert-detalle-padding" });
+  relleno.append(crear("p", { text: `${i18n.t("formacion.credencial")}: ${c.credencial}` }));
+  relleno.append(crear("p", { class: "cert-skill", text: t(c.skill) }));
+  if (c.entidadUrl) relleno.append(enlace(c.entidad, c.entidadUrl, "enlace-flecha"));
+  contenido.append(relleno);
   dentro.append(contenido);
   det.append(sum, dentro);
   det.addEventListener("toggle", () => {
-    det.dataset["abierto"] = String(det.open);
+    if (!det.hasAttribute("data-animando")) {
+      det.dataset["abierto"] = String(det.open);
+    }
   });
   return det;
 }
@@ -696,50 +705,45 @@ function configurarRevelado(raiz: ParentNode): () => void {
   return () => obs.disconnect();
 }
 
-/** Abre o cierra un bloque con animación de altura. / Opens or closes a block with a height animation. */
+/** Abre o cierra un bloque con animación de fila de grid. / Opens or closes a block with a grid-row animation. */
 function alternarDetalle(det: HTMLDetailsElement): void {
   const contenido = det.querySelector<HTMLElement>(".detalle-in, .cert-detalle");
   if (!contenido || det.hasAttribute("data-animando")) return;
   det.setAttribute("data-animando", "");
   const abrir = !det.open;
-  det.dataset["abierto"] = String(abrir);
-  if (abrir) det.open = true;
-  const altura = contenido.scrollHeight;
+  const etiqueta = det.querySelector<HTMLElement>(".desplegable-texto");
+  if (etiqueta) {
+    etiqueta.textContent = abrir ? i18n.t("experiencia.verMenos") : i18n.t("experiencia.verDetalle");
+  }
+  let temporizador = 0;
 
   const limpiar = (): void => {
-    contenido.style.removeProperty("height");
-    contenido.style.removeProperty("overflow");
-    contenido.style.removeProperty("opacity");
-    contenido.style.removeProperty("box-sizing");
-    contenido.style.removeProperty("transition");
+    window.clearTimeout(temporizador);
+    contenido.removeEventListener("transitionend", fin);
     det.removeAttribute("data-animando");
   };
-
-  if (altura === 0) {
-    if (!abrir) det.open = false;
-    limpiar();
-    return;
-  }
-
-  contenido.style.boxSizing = "border-box";
-  contenido.style.overflow = "hidden";
-  contenido.style.height = abrir ? "0px" : `${altura}px`;
-  contenido.style.opacity = abrir ? "0" : "1";
-  void contenido.offsetHeight;
-
   const fin = (ev: TransitionEvent): void => {
-    if (ev.propertyName !== "height") return;
-    contenido.removeEventListener("transitionend", fin);
+    if (ev.propertyName !== "grid-template-rows") return;
     if (!abrir) det.open = false;
     limpiar();
   };
+
+  if (abrir) {
+    det.dataset["abierto"] = "false";
+    det.open = true;
+    void det.offsetHeight;
+    requestAnimationFrame(() => {
+      det.dataset["abierto"] = "true";
+    });
+  } else {
+    det.dataset["abierto"] = "false";
+  }
+
   contenido.addEventListener("transitionend", fin);
-  requestAnimationFrame(() => {
-    contenido.style.transition =
-      "height 0.24s var(--ease-entrada), opacity 0.18s var(--ease-salida)";
-    contenido.style.height = abrir ? `${altura}px` : "0px";
-    contenido.style.opacity = abrir ? "1" : "0";
-  });
+  temporizador = window.setTimeout(
+    () => fin({ propertyName: "grid-template-rows" } as TransitionEvent),
+    320,
+  );
 }
 
 /** Cablea todas las interacciones. / Wires all interactions. */
