@@ -144,12 +144,14 @@ function pintarExperiencia(raiz: ParentNode, d: Perfil): void {
       summaryTexto,
     );
     const dentro = crear("div", { class: "detalle-in" });
+    const contenido = crear("div", { class: "detalle-contenido" });
     const logros = crear("ul", { class: "lista-logros" });
     for (const logro of tl(exp.logros)) logros.append(crear("li", { text: logro }));
     const herramientas = crear("p", { class: "rol-herramientas" });
     herramientas.append(crear("strong", { text: `${i18n.t("experiencia.herramientas")}: ` }));
     herramientas.append(document.createTextNode(exp.herramientas.join(", ")));
-    dentro.append(logros, herramientas);
+    contenido.append(logros, herramientas);
+    dentro.append(contenido);
     detalle.append(summary, dentro);
     detalle.addEventListener("toggle", () => {
       if (detalle.open) abiertos.add(exp.id);
@@ -324,9 +326,11 @@ function certificado(c: Certificacion): HTMLDetailsElement {
   sum.append(crear("span", { class: "cert-entidad", text: c.entidad }));
   sum.append(crear("span", { class: "desplegable-icono", attrs: { "aria-hidden": "true" } }));
   const dentro = crear("div", { class: "cert-detalle" });
-  dentro.append(crear("p", { text: `${i18n.t("formacion.credencial")}: ${c.credencial}` }));
-  dentro.append(crear("p", { class: "cert-skill", text: t(c.skill) }));
-  if (c.entidadUrl) dentro.append(enlace(c.entidad, c.entidadUrl, "enlace-flecha"));
+  const contenido = crear("div", { class: "cert-detalle-contenido" });
+  contenido.append(crear("p", { text: `${i18n.t("formacion.credencial")}: ${c.credencial}` }));
+  contenido.append(crear("p", { class: "cert-skill", text: t(c.skill) }));
+  if (c.entidadUrl) contenido.append(enlace(c.entidad, c.entidadUrl, "enlace-flecha"));
+  dentro.append(contenido);
   det.append(sum, dentro);
   det.addEventListener("toggle", () => {
     det.dataset["abierto"] = String(det.open);
