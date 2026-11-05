@@ -47,7 +47,7 @@ No protege frente a:
 - un cambio futuro a modo público o una filtración de la clave;
 - el sobre antiguo que ya se publicó en el historial de git y en la rama `web`.
 
-El sobre estático antiguo (`assets/datos/perfil.cifrado.json`) se ha retirado del HEAD, pero **sigue en el historial de git y en la rama `web`**. Si la clave antigua era corta, ese sobre puede atacarse offline. La limpieza completa requiere purgar el historial (`git filter-repo`/BFG) y rotar la clave; es una operación destructiva y debe hacerse aparte, con confirmación expresa.
+El sobre estático antiguo (`assets/datos/perfil.cifrado.json`) se ha retirado del HEAD y de la rama `web` actual, pero **sigue en el historial de git, incluidos commits anteriores de la rama `web`**. Si la clave antigua era corta, ese sobre puede atacarse offline. La limpieza completa requiere purgar el historial (`git filter-repo`/BFG) y rotar la clave; es una operación destructiva y debe hacerse aparte, con confirmación expresa.
 
 ---
 
