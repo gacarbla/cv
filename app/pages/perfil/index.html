@@ -1,0 +1,145 @@
+<div class="pagina-perfil">
+  <section class="hero" aria-labelledby="hero-nombre">
+    <div class="hero-grid">
+      <div class="hero-texto">
+        <h1 id="hero-nombre" data-campo="nombre"></h1>
+        <p class="titular" data-campo="titular"></p>
+        <p class="hero-estado" data-campo="estadoLinea"></p>
+        <p class="hero-resumen" data-campo="resumenCorto"></p>
+        <nav class="redes" data-redes data-i18n-aria-label="hero.redes" aria-label="Redes y enlaces"></nav>
+      </div>
+    </div>
+    <div class="hero-adorno" aria-hidden="true">
+      <span class="hero-adorno-orbita"><span class="hero-adorno-dot"></span></span>
+    </div>
+  </section>
+
+  <div class="perfil-grid">
+    <aside class="riel">
+      <nav class="indice" data-indice data-i18n-aria-label="nav.indice" aria-label="Índice del perfil">
+        <a href="#resumen" data-seccion="resumen" class="activo"><span data-i18n="nav.resumen">Resumen</span></a>
+        <a href="#experiencia" data-seccion="experiencia"><span data-i18n="nav.experiencia">Experiencia</span></a>
+        <a href="#recomendaciones" data-seccion="recomendaciones"><span data-i18n="nav.recomendaciones">Recomendaciones</span></a>
+        <a href="#competencias" data-seccion="competencias"><span data-i18n="nav.competencias">Competencias</span></a>
+        <a href="#proyectos" data-seccion="proyectos"><span data-i18n="nav.proyectos">Proyectos</span></a>
+        <a href="#formacion" data-seccion="formacion"><span data-i18n="nav.formacion">Formación</span></a>
+        <a href="#idiomas" data-seccion="idiomas"><span data-i18n="nav.idiomas">Idiomas</span></a>
+        <a href="#voluntariado" data-seccion="voluntariado"><span data-i18n="nav.voluntariado">Voluntariado</span></a>
+        <a href="#contacto" data-seccion="contacto"><span data-i18n="nav.contacto">Contacto</span></a>
+      </nav>
+    </aside>
+
+    <div class="perfil-contenido">
+      <section id="resumen" class="seccion" aria-labelledby="resumen-t">
+        <header class="seccion-cab">
+          <h2 id="resumen-t" data-i18n="resumen.titulo">Resumen</h2>
+        </header>
+        <div class="prosa" data-campo="sobreMi"></div>
+      </section>
+
+      <section id="experiencia" class="seccion" aria-labelledby="experiencia-t">
+        <header class="seccion-cab">
+          <h2 id="experiencia-t" data-i18n="experiencia.titulo">Experiencia</h2>
+        </header>
+        <div class="filtros" data-filtros-experiencia role="group" data-i18n-aria-label="experiencia.filtro" aria-label="Filtrar por área"></div>
+        <ol class="linea" data-lista="experiencia"></ol>
+        <p class="vacio" data-vacio-experiencia hidden data-i18n="experiencia.sinResultados">No hay roles para este filtro.</p>
+      </section>
+
+      <section id="recomendaciones" class="seccion" aria-labelledby="recomendaciones-t">
+        <header class="seccion-cab">
+          <h2 id="recomendaciones-t" data-i18n="recomendaciones.titulo">Recomendaciones</h2>
+        </header>
+        <div class="recomendaciones" data-lista="recomendaciones"></div>
+      </section>
+
+      <section id="competencias" class="seccion" aria-labelledby="competencias-t">
+        <header class="seccion-cab">
+          <h2 id="competencias-t" data-i18n="aptitudes.titulo">Aptitudes y competencias</h2>
+        </header>
+        <div class="buscador">
+          <label for="buscar-aptitud" data-i18n="aptitudes.buscar">Buscar competencia</label>
+          <div class="buscador-campo">
+            <input id="buscar-aptitud" type="search" autocomplete="off" spellcheck="false" placeholder="TypeScript, flotas…">
+            <span class="contador" data-contador-aptitudes aria-live="polite"></span>
+          </div>
+        </div>
+        <div class="chips" data-filtros-aptitudes role="group" aria-label="Filtrar competencias"></div>
+        <div class="aptitudes" data-lista="aptitudes"></div>
+        <p class="vacio" data-vacio-aptitudes hidden data-i18n="aptitudes.sinResultados">No hay competencias que coincidan.</p>
+        <div class="herramientas">
+          <h3 data-i18n="aptitudes.herramientas">Herramientas y aplicaciones</h3>
+          <ul class="herramientas-lista" data-lista="herramientas"></ul>
+        </div>
+      </section>
+
+      <section id="proyectos" class="seccion" aria-labelledby="proyectos-t">
+        <header class="seccion-cab">
+          <h2 id="proyectos-t" data-i18n="proyectos.titulo">Proyectos</h2>
+          <p class="seccion-nota" data-i18n="proyectos.lede">Proyectos personales de aprendizaje. No son experiencia profesional.</p>
+        </header>
+        <div class="proyectos" data-lista="proyectos"></div>
+      </section>
+
+      <section id="formacion" class="seccion" aria-labelledby="formacion-t">
+        <header class="seccion-cab">
+          <h2 id="formacion-t" data-i18n="formacion.titulo">Formación</h2>
+        </header>
+        <div class="formacion-grid">
+          <div data-lista="formacion"></div>
+          <div data-lista="aprendizaje"></div>
+        </div>
+        <h3 class="sub" data-i18n="formacion.certificados">Licencias y certificaciones</h3>
+        <div class="certificados" data-lista="certificaciones"></div>
+      </section>
+
+      <section id="idiomas" class="seccion" aria-labelledby="idiomas-t">
+        <header class="seccion-cab">
+          <h2 id="idiomas-t" data-i18n="idiomas.titulo">Idiomas</h2>
+        </header>
+        <div class="idiomas-lista" data-lista="idiomas"></div>
+      </section>
+
+      <section id="voluntariado" class="seccion" aria-labelledby="voluntariado-t">
+        <header class="seccion-cab">
+          <h2 id="voluntariado-t" data-i18n="voluntariado.titulo">Voluntariado</h2>
+        </header>
+        <div class="voluntariado" data-lista="voluntariado"></div>
+      </section>
+
+      <section id="contacto" class="seccion seccion-tinta" aria-labelledby="contacto-t">
+        <div class="contacto-in">
+          <h2 id="contacto-t" data-i18n="contacto.titulo">Hablemos por correo.</h2>
+          <a class="contacto-email" data-campo="email" href="#"></a>
+          <div class="contacto-acciones">
+            <button class="btn fantasma claro" type="button" data-accion="copiar-email" data-i18n="contacto.copiar">Copiar correo</button>
+            <a class="btn fantasma claro" data-url="linkedin" href="#" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+            <a class="btn fantasma claro" data-url="github" href="#" target="_blank" rel="noopener noreferrer">GitHub</a>
+            <a class="btn fantasma claro" data-url="web" href="#" target="_blank" rel="noopener noreferrer">gacarbla.es</a>
+          </div>
+          <p class="contacto-nota" data-campo="contactoNota"></p>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+
+<dialog class="dialogo dialogo-pdf" data-dialogo-pdf aria-labelledby="pdf-t">
+  <div class="dialogo-cab">
+    <h2 id="pdf-t" data-i18n="recomendaciones.cartaTitulo">Carta de recomendación</h2>
+    <button class="icono" type="button" data-accion="cerrar-pdf" data-i18n-aria-label="comun.cerrar" aria-label="Cerrar">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M18 6 6 18"></path>
+        <path d="m6 6 12 12"></path>
+      </svg>
+    </button>
+  </div>
+  <div class="pdf-cuerpo">
+    <iframe data-pdf-iframe title="Carta de recomendación" src="about:blank"></iframe>
+    <p class="pdf-aviso" data-i18n="recomendaciones.pdfAviso">Si el visor no carga, abre la carta en una pestaña.</p>
+    <div class="pdf-acciones">
+      <a data-pdf-abrir href="#" target="_blank" rel="noopener noreferrer" data-i18n="recomendaciones.abrirPestana">Abrir en una pestaña</a>
+    </div>
+  </div>
+</dialog>
+<div class="toast" data-toast role="status" aria-live="polite" hidden></div>

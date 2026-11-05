@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GACARBLA. Perfil privado</title>
+<meta name="description" content="Perfil profesional privado. Acceso mediante clave personal.">
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex">
+<meta name="referrer" content="no-referrer">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://api.gacarbla.es; frame-src 'self' blob:; object-src 'none'; base-uri 'none'; form-action 'self'">
+<meta name="theme-color" content="#faf8f4" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#14110c" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="/assets/favicon.png">
+<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/space-grotesk-latin.woff2" crossorigin>
+<link rel="modulepreload" href="/app/index.js">
+<link rel="modulepreload" href="/app/lib/rtw/index.js">
+<script src="/assets/tema.js"></script>
+<link rel="preload" as="fetch" href="/app/layouts/acceso/index.html" crossorigin>
+<link rel="preload" as="fetch" href="/app/layouts/acceso/style.css" crossorigin>
+<link rel="preload" as="fetch" href="/app/pages/acceso/index.html" crossorigin>
+<link rel="preload" as="fetch" href="/app/pages/acceso/style.css" crossorigin>
+<style>
+/* CSS crítico: pinta el arranque sin esperar al JS. No contiene datos privados. */
+@font-face{font-family:"Space Grotesk";src:url("/assets/fonts/space-grotesk-latin.woff2") format("woff2");font-weight:300 700;font-style:normal;font-display:swap}
+:root{--paper:#faf8f4;--ink:#17150f;--muted:#6b6455;--line:#e5ded2;--accent:#b3541e;--accent-texto:#8f3f12;--accent-suave:#f4e5d8;--card:#fff;--exito:#2f7a52;--fuente-titulo:"Space Grotesk",system-ui,sans-serif;--fuente-mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-tema="claro"]){--paper:#14110c;--ink:#f2ede3;--muted:#a89e8a;--line:#2e2a24;--accent:#e08a4c;--accent-texto:#f0a06a;--accent-suave:#33251a;--card:#1d1913;--exito:#6fbf8f;color-scheme:dark}}
+:root[data-tema="oscuro"]{--paper:#14110c;--ink:#f2ede3;--muted:#a89e8a;--line:#2e2a24;--accent:#e08a4c;--accent-texto:#f0a06a;--accent-suave:#33251a;--card:#1d1913;--exito:#6fbf8f;color-scheme:dark}
+:root[data-tema="claro"]{--paper:#faf8f4;--ink:#17150f;--muted:#6b6455;--line:#e5ded2;--accent:#b3541e;--accent-texto:#8f3f12;--accent-suave:#f4e5d8;--card:#fff;--exito:#2f7a52;color-scheme:light}
+*{box-sizing:border-box}
+page{display:block}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased}
+h1{font-family:var(--fuente-titulo);line-height:1;letter-spacing:-.035em}
+.arranque{min-height:100vh;min-height:100dvh;display:grid;place-items:center;padding:24px}
+.cargando{max-width:360px;text-align:center}
+.eyebrow{font-family:var(--fuente-mono);font-size:.64rem;text-transform:uppercase;letter-spacing:.2em;color:var(--accent-texto);margin:0 0 12px}
+.cargando h1{font-size:clamp(2rem,6vw,2.8rem);margin:0 0 12px}
+.cargando p{font-size:.9rem;color:var(--muted);margin:0 auto 22px;max-width:34ch}
+.spinner{width:18px;height:18px;border:2px solid var(--accent);border-right-color:transparent;border-radius:50%;display:inline-block;animation:girar .8s linear infinite}
+@keyframes girar{to{transform:rotate(360deg)}}
+.noscript{margin:24px auto 0;max-width:420px;padding:14px 16px;border:1px solid var(--line);border-radius:12px;background:var(--card);font-size:.82rem;color:var(--muted);text-align:left}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.spinner{animation-duration:2s}}
+@media print{html,body{background:#fff!important}body>*{display:none!important}body::before{content:"Este perfil es privado y no está previsto para imprimir. Ya tienes el currículum.";display:block;padding:24px;font-family:var(--fuente-titulo);font-size:16pt;line-height:1.4;color:#000}}
+</style>
+</head>
+<body>
+<!--
+  Arranque estático: solo marca y estado de carga. Ningún dato del perfil
+  se sirve en el HTML; el sobre cifrado se descifra en el navegador.
+  Static boot: brand and loading state only. No profile data is served in
+  the HTML; the encrypted envelope is decrypted in the browser.
+-->
+<app>
+  <div class="rtw-view arranque" aria-busy="true">
+    <main class="cargando">
+      <h1>GACARBLA</h1>
+      <p>Comprobando el acceso en tu dispositivo…</p>
+      <span class="spinner" aria-hidden="true"></span>
+      <noscript>
+        <p class="noscript">Activa JavaScript para acceder. La comprobación de la clave y el descifrado se hacen en tu dispositivo; solo se envía un hash derivado.</p>
+      </noscript>
+    </main>
+  </div>
+</app>
+<script type="module" src="/app/index.js"></script>
+</body>
+</html>

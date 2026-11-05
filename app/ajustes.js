@@ -1,0 +1,10 @@
+export const API_BASE = "https://api.gacarbla.es";
+export const RUTA_PARAMS = `${API_BASE}/cv/v1/params`;
+export const RUTA_UNLOCK = `${API_BASE}/cv/v1/unlock`;
+export const RUTA_PUBLICO = "/assets/datos/perfil.publico.json";
+export const RUTA_MODO = "/assets/datos/modo.json";
+export const CLAVE_SESION = "cv:sesion";
+export const CLAVE_INTENTOS = "cv:intentos";
+export const TTL_SESION = 2 * 60 * 60 * 1000;
+export const ITERACIONES_MIN = 300000;
+export const ITERACIONES_MAX = 2000000;

@@ -1,0 +1,49 @@
+<section class="pagina-acceso" aria-labelledby="acceso-titulo">
+  <div class="puerta">
+    <div class="puerta-marca" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect width="18" height="11" x="3" y="11" rx="2" ry="2"></rect>
+        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+      </svg>
+    </div>
+    <h1 id="acceso-titulo" data-i18n="acceso.titulo">Acceso reservado</h1>
+    <p class="lede" data-i18n="acceso.texto">Este perfil se comparte con una clave personal. Escanea el QR de tu copia impresa o escríbela aquí.</p>
+
+    <form class="form-acceso" method="post" action="/" novalidate>
+      <label for="clave" data-i18n="acceso.etiqueta">Clave de acceso</label>
+      <div class="campo">
+        <input
+          id="clave"
+          name="clave"
+          type="text"
+          inputmode="text"
+          autocomplete="off"
+          autocapitalize="none"
+          spellcheck="false"
+          placeholder="palabra-palabra-palabra-000"
+          aria-describedby="clave-ayuda clave-error"
+          data-i18n-placeholder="acceso.placeholder"
+          required
+        >
+        <button class="btn primario" type="submit">
+          <span class="spinner" hidden aria-hidden="true"></span>
+          <span data-texto-boton data-i18n="acceso.entrar">Entrar</span>
+        </button>
+      </div>
+      <p id="clave-error" class="error" role="alert" aria-live="assertive" hidden></p>
+      <p id="clave-ayuda" class="ayuda" data-i18n="acceso.ayuda">Puedes escribirla con guiones o con espacios. No distingue mayúsculas.</p>
+    </form>
+
+    <p class="privacidad">
+      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"></path>
+        <path d="m9 12 2 2 4-4"></path>
+      </svg>
+      <span data-i18n="acceso.privacidad">Tu contraseña no se envía. El navegador deriva una clave y solo envía un hash; el perfil llega cifrado y se descifra en este dispositivo.</span>
+    </p>
+
+    <div class="puerta-pie">
+      <a href="mailto:gacarbla@gacarbla.es?subject=Solicitud%20de%20acceso%20al%20perfil%20privado" data-i18n="acceso.solicitar">¿No tienes clave? Solicítala</a>
+    </div>
+  </div>
+</section>
