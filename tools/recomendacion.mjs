@@ -23,4 +23,4 @@ recomendacion.archivo = `data:application/pdf;base64,${base64}`;
 writeFileSync(PERFIL, `${JSON.stringify(datos, null, 2)}\n`, "utf8");
 
 console.log("Carta embebida en privado/perfil.json.");
-console.log("Ahora ejecuta: npm run cifrar");
+console.log("Ahora publica el contenido desde el panel de la API.");

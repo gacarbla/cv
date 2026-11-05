@@ -22,4 +22,4 @@ writeFileSync(MODO, `${JSON.stringify({ modo: "publico", actualizado: new Date()
 
 console.log(`Publicado en claro: ${SALIDA}`);
 console.log("A partir de ahora el perfil es visible sin clave y puede indexarse.");
-console.log("Para volver al modo cifrado: npm run cifrar");
+console.log('Para volver al modo cifrado, deja {"modo":"cifrado"} en assets/datos/modo.json.');

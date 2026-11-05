@@ -14,6 +14,7 @@ function mensajeError(tipo: NonNullable<typeof estadoAcceso.error>, segundos: nu
   if (tipo === "red") return i18n.t("acceso.errorRed");
   if (tipo === "crypto") return i18n.t("acceso.errorCrypto");
   if (tipo === "espera") return i18n.t("acceso.espera", { s: segundos });
+  if (tipo === "servicio") return i18n.t("acceso.errorServicio");
   return i18n.t("acceso.errorClave");
 }
 
